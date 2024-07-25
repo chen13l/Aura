@@ -57,7 +57,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActo
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                                       const FHitResult& HitResult)
 {
-	if (OtherActor != GetOwner()) { return; }
+	if (OtherActor == GetOwner()) { return; }
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 	LoopingSoundComp->Stop();
