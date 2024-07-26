@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AuraGameplayTags.h"
 #include "Actor/AuraProjectile.h"
 #include "Interaction/CombatInterface.h"
 
@@ -35,15 +36,21 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
 			ProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(),
 			Cast<APawn>(GetOwningActorFromActorInfo()),
 			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-		
+
 		UAbilitySystemComponent* SourseASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(
 			GetAvatarActorFromActorInfo());
-		FGameplayEffectSpecHandle EffectSpecHandle = SourseASC->MakeOutgoingSpec(
+		const FGameplayEffectSpecHandle EffectSpecHandle = SourseASC->MakeOutgoingSpec(
 			DamageEffectClass, GetAbilityLevel(), SourseASC->MakeEffectContext());
-		SpawnActorDeferred->SetDamageSpecHandle(EffectSpecHandle);
-		AActor* TemActor = GetAvatarActorFromActorInfo();
+
+		float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+
+		FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
+		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, GameplayTags.Damage,
+		                                                              ScaledDamage);
+
+		SpawnActorDeferred->DamageSpecHandle = EffectSpecHandle;
 		SpawnActorDeferred->SetOwner(GetAvatarActorFromActorInfo());
-		
+
 		SpawnActorDeferred->FinishSpawning(SpawnTransform);
 	}
 }

@@ -72,7 +72,7 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 		if (LocalIncomingDamage > 0.f)
 		{
-			float NewHealth = GetHealth() - LocalIncomingDamage;
+			const float NewHealth = GetHealth() - LocalIncomingDamage;
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 			const bool bFatal = NewHealth <= 0.f;
 		}

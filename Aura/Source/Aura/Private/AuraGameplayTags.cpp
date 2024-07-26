@@ -61,4 +61,8 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 		"InputTag.3", "Input Tag for 3 key");
 	AuraGameplayTags.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"InputTag.4", "Input Tag for 4 key");
+
+	/**/
+	AuraGameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Damage", "Damage");
 }

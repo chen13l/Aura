@@ -20,10 +20,8 @@ class AURA_API AAuraProjectile : public AActor
 public:
 	AAuraProjectile();
 
-	FORCEINLINE void SetDamageSpecHandle(const FGameplayEffectSpecHandle& EffectSpecHandle)
-	{
-		DamageSpecHandle = EffectSpecHandle;
-	}
+	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess, ExposeOnSpawn= true))
+	FGameplayEffectSpecHandle DamageSpecHandle;
 
 protected:
 	virtual void BeginPlay() override;
@@ -55,7 +53,4 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> LoopingSoundComp;
-
-	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess, ExposeOnSpawn= true))
-	FGameplayEffectSpecHandle DamageSpecHandle;
 };
