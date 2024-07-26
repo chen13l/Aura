@@ -53,6 +53,7 @@ struct FEffectProperties
 	UPROPERTY()
 	ACharacter* TargetCharacter = nullptr;
 };
+
 /*
  * TBaseStaticDelegateInstance 在Delegate_retval 中的BindStatic(), 即说明了delegate通过函数指针进行,也可以直接使用TFunction()
  * TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr可直接用函数指针代替FGameplayAttribute(*)()
@@ -66,7 +67,7 @@ struct FEffectProperties
  * 可以通过RandomFuncPtr(0, 0.f, 0)调用
  */
 template <class T>
-using TStaticFunPtr = typename TBaseStaticDelegateInstance<T,FDefaultDelegateUserPolicy>::FFuncPtr;
+using TStaticFunPtr = typename TBaseStaticDelegateInstance<T, FDefaultDelegateUserPolicy>::FFuncPtr;
 
 UCLASS()
 class AURA_API UAuraAttributeSet : public UAttributeSet
@@ -83,8 +84,16 @@ public:
 	//Attributes needs to be added to GetLifetimeReplicatedProps
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	TMap<FGameplayTag,TStaticFunPtr<FGameplayAttribute()>> TagsToAttributes;
-	
+	TMap<FGameplayTag, TStaticFunPtr<FGameplayAttribute()>> TagsToAttributes;
+
+	/*
+	 * Meta Attribute
+	 */
+
+	UPROPERTY(BlueprintReadOnly, Category="Meta Attribute")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UAuraAttributeSet, IncomingDamage);
+
 	/*
 	 * Vital Attributes
 	 */
