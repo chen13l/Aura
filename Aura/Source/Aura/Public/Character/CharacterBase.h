@@ -24,7 +24,9 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 	virtual FVector GetCombatSocketLocation() const override;
-	
+
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -58,7 +60,11 @@ protected:
 	virtual void InitDefaultAttributeByGE() const;
 
 	virtual void AddCharacterAbilities();
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category= "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditAnywhere, Category="Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 };

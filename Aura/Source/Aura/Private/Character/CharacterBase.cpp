@@ -10,10 +10,10 @@ ACharacterBase::ACharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
-	GetMesh()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
-	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile,ECR_Overlap);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
 
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
@@ -25,6 +25,11 @@ FVector ACharacterBase::GetCombatSocketLocation() const
 {
 	check(Weapon);
 	return Weapon->GetSocketLocation(WeaponTipSockName);
+}
+
+UAnimMontage* ACharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
 }
 
 void ACharacterBase::BeginPlay()
@@ -57,7 +62,7 @@ void ACharacterBase::InitDefaultAttributeByGE() const
 void ACharacterBase::AddCharacterAbilities()
 {
 	if (!HasAuthority()) { return; }
-	
+
 	UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	ASC->AddCharacterAbilities(StartupAbilities);
 }
