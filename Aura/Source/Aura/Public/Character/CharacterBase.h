@@ -27,6 +27,10 @@ public:
 
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 
+	virtual void Die() override;
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -60,6 +64,20 @@ protected:
 	virtual void InitDefaultAttributeByGE() const;
 
 	virtual void AddCharacterAbilities();
+
+	/* Dissolve Effects*/
+	void Dissolve();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeLine(UMaterialInstanceDynamic* MaterialInstanceDynamic);
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartWeaponDissolveTimeLine(UMaterialInstanceDynamic* MaterialInstanceDynamic);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category= "Abilities")
