@@ -48,10 +48,7 @@ void UAuraAbilitySystemLibrary::InitDefaultAttributes(const UObject* WorldContex
                                                       ECharacterCatrgory CharacterCatrgory, float Level,
                                                       UAbilitySystemComponent* ASC)
 {
-	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (AuraGameMode == nullptr) { return; }
-
-	TObjectPtr<UCharacterCategoryInfo> CharacterCategoryInfo = AuraGameMode->CharacterCategoryInfo;
+	UCharacterCategoryInfo* CharacterCategoryInfo = GetCharacterCategoryInfo(WorldContextObject);
 	FCharacterCategoryDefaultInfo CharacterDefaultInfo = CharacterCategoryInfo->
 		GetCharacterClassInfo(CharacterCatrgory);
 	AActor* AvatorActor = ASC->GetAvatarActor();
@@ -77,13 +74,18 @@ void UAuraAbilitySystemLibrary::InitDefaultAttributes(const UObject* WorldContex
 
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
-	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (AuraGameMode == nullptr) { return; }
-	
-	TObjectPtr<UCharacterCategoryInfo> CharacterCategoryInfo = AuraGameMode->CharacterCategoryInfo;
-	for(TSubclassOf<UGameplayAbility> AbilityClass:CharacterCategoryInfo->CommonAbilities)
+	UCharacterCategoryInfo* CharacterCategoryInfo = GetCharacterCategoryInfo(WorldContextObject);
+	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterCategoryInfo->CommonAbilities)
 	{
-		FGameplayAbilitySpec AbilitySpec(AbilityClass,1);
+		FGameplayAbilitySpec AbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(AbilitySpec);
 	}
+}
+
+UCharacterCategoryInfo* UAuraAbilitySystemLibrary::GetCharacterCategoryInfo(const UObject* WorldContextObject)
+{
+	AAuraGameModeBase* AuraGameMode = Cast<AAuraGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (AuraGameMode == nullptr) { return nullptr; }
+
+	return AuraGameMode->CharacterCategoryInfo;
 }
