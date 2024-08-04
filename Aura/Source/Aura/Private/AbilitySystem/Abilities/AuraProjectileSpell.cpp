@@ -47,10 +47,14 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
 
 		const FGameplayEffectSpecHandle EffectSpecHandle = SourseASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), EffectContextHandle);
 
-		float ScaledDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+		
+		for(auto& [DamageTag, DamageValue] : DamageTypes)
+		{
+			float ScaledDamage = DamageValue.GetValueAtLevel(GetAbilityLevel());
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, DamageTag, ScaledDamage);
+		}
 
 		FAuraGameplayTags GameplayTags = FAuraGameplayTags::Get();
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(EffectSpecHandle, GameplayTags.Damage, ScaledDamage);
 
 		SpawnProjectile->DamageSpecHandle = EffectSpecHandle;
 		SpawnProjectile->SetOwner(GetAvatarActorFromActorInfo());

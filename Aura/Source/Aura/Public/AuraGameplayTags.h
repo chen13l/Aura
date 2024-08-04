@@ -50,7 +50,7 @@ public:
 	FGameplayTag Attributes_Resistance_Physical;
 	FGameplayTag Attributes_Resistance_Lightning;
 
-	TMap<FGameplayTag,FGameplayTag> ResistanceToDamamgeTypesMap;
+	TMap<FGameplayTag,FGameplayTag> DamageTypesToResistances;
 	
 	FGameplayTag Effects_HitReact;
 
