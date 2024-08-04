@@ -48,7 +48,11 @@ void AAuraProjectile::Destroyed()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		LoopingSoundComp->Stop();
+		if (LoopingSoundComp)
+		{
+			LoopingSoundComp->Stop();
+			LoopingSoundComp->DestroyComponent();
+		}
 	}
 	Super::Destroyed();
 }
@@ -60,7 +64,11 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActo
 	if (OtherActor == GetOwner()) { return; }
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	LoopingSoundComp->Stop();
+	if (LoopingSoundComp)
+	{
+		LoopingSoundComp->Stop();
+		LoopingSoundComp->DestroyComponent();
+	}
 	Sphere->IgnoreActorWhenMoving(GetOwner(), true);
 	if (HasAuthority())
 	{

@@ -50,26 +50,22 @@ void UAuraAbilitySystemLibrary::InitDefaultAttributes(const UObject* WorldContex
                                                       UAbilitySystemComponent* ASC)
 {
 	UCharacterCategoryInfo* CharacterCategoryInfo = GetCharacterCategoryInfo(WorldContextObject);
-	FCharacterCategoryDefaultInfo CharacterDefaultInfo = CharacterCategoryInfo->
-		GetCharacterClassInfo(CharacterCatrgory);
+	FCharacterCategoryDefaultInfo CharacterDefaultInfo = CharacterCategoryInfo->GetCharacterClassInfo(CharacterCatrgory);
 	AActor* AvatorActor = ASC->GetAvatarActor();
 
 	FGameplayEffectContextHandle PrimaryContext = ASC->MakeEffectContext();
 	PrimaryContext.AddSourceObject(AvatorActor);
-	const FGameplayEffectSpecHandle PrimarySpecHandle = ASC->MakeOutgoingSpec(
-		CharacterDefaultInfo.PrimaryAttributes, Level, PrimaryContext);
+	const FGameplayEffectSpecHandle PrimarySpecHandle = ASC->MakeOutgoingSpec(CharacterDefaultInfo.PrimaryAttributes, Level, PrimaryContext);
 	ASC->ApplyGameplayEffectSpecToSelf(*PrimarySpecHandle.Data.Get());
 
 	FGameplayEffectContextHandle SecondaryContext = ASC->MakeEffectContext();
 	SecondaryContext.AddSourceObject(AvatorActor);
-	const FGameplayEffectSpecHandle SecondarySpecHandle = ASC->MakeOutgoingSpec(
-		CharacterCategoryInfo->SecondaryAttributes, Level, SecondaryContext);
+	const FGameplayEffectSpecHandle SecondarySpecHandle = ASC->MakeOutgoingSpec(CharacterCategoryInfo->SecondaryAttributes, Level, SecondaryContext);
 	ASC->ApplyGameplayEffectSpecToSelf(*SecondarySpecHandle.Data.Get());
 
 	FGameplayEffectContextHandle VitalContext = ASC->MakeEffectContext();
 	VitalContext.AddSourceObject(AvatorActor);
-	const FGameplayEffectSpecHandle VitalSpecHandle = ASC->MakeOutgoingSpec(
-		CharacterCategoryInfo->VitalAttributes, Level, VitalContext);
+	const FGameplayEffectSpecHandle VitalSpecHandle = ASC->MakeOutgoingSpec(CharacterCategoryInfo->VitalAttributes, Level, VitalContext);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalSpecHandle.Data.Get());
 }
 
