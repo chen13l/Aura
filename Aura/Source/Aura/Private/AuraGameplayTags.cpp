@@ -62,10 +62,35 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	AuraGameplayTags.InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"InputTag.4", "Input Tag for 4 key");
 
-	/**/
+	/* Damage Types */
 	AuraGameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Damage", "Damage");
 
+	AuraGameplayTags.Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Damage.Fire", "Fire damage type");
+	AuraGameplayTags.Damage_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Damage.Lightning", "Lightning damage type");
+	AuraGameplayTags.Damage_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Damage.Arcane", "Arcane damage type");
+	AuraGameplayTags.Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Damage.Physical", "Physical damage type");
+
+	/* Resistance Type */
+	AuraGameplayTags.Attributes_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Attributes.Resistance.Fire", "Resistance for Fire damage");
+	AuraGameplayTags.Attributes_Resistance_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Attributes.Resistance.Lightning", "Resistance for Lightning damage");
+	AuraGameplayTags.Attributes_Resistance_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Attributes.Resistance.Arcane", "Resistance for Arcane damage");
+	AuraGameplayTags.Attributes_Resistance_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Attributes.Resistance.Physical", "Resistance for Physical damage");
+
+	/* Map Resistance to Damage types */
+	AuraGameplayTags.ResistanceToDamamgeTypesMap.Add(AuraGameplayTags.Attributes_Resistance_Fire, AuraGameplayTags.Damage_Fire);
+	AuraGameplayTags.ResistanceToDamamgeTypesMap.Add(AuraGameplayTags.Attributes_Resistance_Lightning, AuraGameplayTags.Damage_Lightning);
+	AuraGameplayTags.ResistanceToDamamgeTypesMap.Add(AuraGameplayTags.Attributes_Resistance_Arcane, AuraGameplayTags.Damage_Arcane);
+	AuraGameplayTags.ResistanceToDamamgeTypesMap.Add(AuraGameplayTags.Attributes_Resistance_Physical, AuraGameplayTags.Damage_Physical);
+
 	AuraGameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
-	"Effects.HitReact", "Tag granted when be hit");
+		"Effects.HitReact", "Tag granted when be hit");
 }
