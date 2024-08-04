@@ -40,6 +40,10 @@ UExeCalc_Damage::UExeCalc_Damage()
 {
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
 	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().ArmorPenetrationDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitChanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitDamageDef);
 }
 
 void UExeCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,

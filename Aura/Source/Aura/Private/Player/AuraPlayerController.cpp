@@ -188,7 +188,7 @@ UAuraAbilitySystemComponent* AAuraPlayerController::GetAuraASC()
 	return AuraASC;
 }
 
-void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
 {
 	if (IsValid(TargetCharacter) && DamageTextCompClass)
 	{
@@ -197,6 +197,6 @@ void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, 
 		DamageTextComp->AttachToComponent(TargetCharacter->GetRootComponent(),
 		                                  FAttachmentTransformRules::KeepRelativeTransform);
 		DamageTextComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		DamageTextComp->SetDamageText(DamageAmount);
+		DamageTextComp->SetDamageText(DamageAmount,bBlockedHit,bCriticalHit);
 	}
 }
