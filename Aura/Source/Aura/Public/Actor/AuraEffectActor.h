@@ -43,17 +43,22 @@ protected:
 	void OnBeginOverlap(AActor* TargetActor);
 	UFUNCTION(BlueprintCallable)
 	void OnEndOverlap(AActor* TargetActor);
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Applied Effects")
 	TSubclassOf<UGameplayEffect> AppliedGameplayEffect;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Applied Effects")
 	EEffectApplicationPolicy EffectApplicationPolicy = EEffectApplicationPolicy::NotApplied;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Applied Effects")
 	EEffectRemovalPolicy EffectRemovalPolicy = EEffectRemovalPolicy::RemoveEndOverlap;
-	
+
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles_ASC;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Applied Effects")
 	float ActorLevel = 1.f;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
+	bool bDestroyOnEffectApplication = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Applied Effects")
+	bool bApplyEffectsToEnemies = false;
 };
