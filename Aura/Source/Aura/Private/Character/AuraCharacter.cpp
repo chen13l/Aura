@@ -18,6 +18,8 @@ AAuraCharacter::AAuraCharacter()
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
+
+	Tags.Add(FName("Player"));
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)

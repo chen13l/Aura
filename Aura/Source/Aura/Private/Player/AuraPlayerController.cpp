@@ -38,10 +38,9 @@ void AAuraPlayerController::AutoRun()
 
 	if (APawn* ControlledPawn = GetPawn())
 	{
-		const FVector LocationOnSpline = Spline->FindLocationClosestToWorldLocation(
-			ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
-		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(
-			LocationOnSpline, ESplineCoordinateSpace::World);
+		const FVector LocationOnSpline = Spline->
+			FindLocationClosestToWorldLocation(ControlledPawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		const FVector Direction = Spline->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
 		ControlledPawn->AddMovementInput(Direction);
 
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
@@ -93,8 +92,8 @@ void AAuraPlayerController::SetupInputComponent()
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &AAuraPlayerController::ShiftPressed);
 	AuraInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &AAuraPlayerController::ShiftReleased);
 
-	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed,
-	                                       &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+	AuraInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased,
+	                                       &ThisClass::AbilityInputTagHeld);
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
@@ -108,6 +107,7 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 	if (APawn* ControlledPawn = GetPawn<APawn>())
 	{
+		bAutoRunning = false;
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
 	}
@@ -132,8 +132,7 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 		if (FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
 			UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(
-				this, ControlledPawn->GetActorLocation(),
-				CachedDestination);
+				this, ControlledPawn->GetActorLocation(), CachedDestination);
 			if (NavPath)
 			{
 				Spline->ClearSplinePoints();
@@ -197,6 +196,6 @@ void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, 
 		DamageTextComp->AttachToComponent(TargetCharacter->GetRootComponent(),
 		                                  FAttachmentTransformRules::KeepRelativeTransform);
 		DamageTextComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		DamageTextComp->SetDamageText(DamageAmount,bBlockedHit,bCriticalHit);
+		DamageTextComp->SetDamageText(DamageAmount, bBlockedHit, bCriticalHit);
 	}
 }
