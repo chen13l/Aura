@@ -31,6 +31,8 @@ AAuraEnemy::AAuraEnemy()
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
 	HealthBar->SetupAttachment(GetRootComponent());
+
+	Tags.Add(FName("Enemy"));
 }
 
 void AAuraEnemy::HighLight()
@@ -105,13 +107,17 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	AuraAIController->RunBehaviorTree(BehaviorTree);
 
-	Tags.Add(FName("Enemy"));
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterCatrgory != ECharacterCatrgory::Warrior);
+	
 }
 
 void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
 }
 
 void AAuraEnemy::InitAbilityActorinfo()
