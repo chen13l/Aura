@@ -102,4 +102,14 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	 */
 	AuraGameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Attack", "Attack ability tag");
+	
+	/*
+	 * Montage
+	 */
+	AuraGameplayTags.Montage_Attack_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Montage.Attack.Weapon", "Weapon");
+	AuraGameplayTags.Montage_Attack_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Montage.Attack.LeftHand", "Left hand");
+	AuraGameplayTags.Montage_Attack_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Montage.Attack.RightHand", "Right hand");
 }
