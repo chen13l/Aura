@@ -14,6 +14,10 @@ class AURA_API UAuraDamageGameplayAbility : public UAuraGameplayAbility
 {
 	GENERATED_BODY()
 
+public:
+	UFUNCTION(BlueprintCallable)
+	void CauseDamage(AActor* Actor);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	TMap<FGameplayTag, FScalableFloat> DamageTypes;

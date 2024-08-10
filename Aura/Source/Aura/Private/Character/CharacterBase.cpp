@@ -21,7 +21,7 @@ ACharacterBase::ACharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-FVector ACharacterBase::GetCombatSocketLocation() const
+FVector ACharacterBase::GetCombatSocketLocation_Implementation()
 {
 	check(Weapon);
 	return Weapon->GetSocketLocation(WeaponTipSockName);
@@ -51,11 +51,23 @@ void ACharacterBase::MulticastHandleDeath_Implementation()
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Dissolve();
+
+	bDead = true;
 }
 
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+bool ACharacterBase::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* ACharacterBase::GetAvatar_Implementation()
+{
+	return this;
 }
 
 void ACharacterBase::InitAbilityActorinfo()

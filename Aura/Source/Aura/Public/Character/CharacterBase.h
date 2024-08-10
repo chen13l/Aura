@@ -23,11 +23,14 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
-	virtual FVector GetCombatSocketLocation() const override;
-
+	/* CombatInterface */
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
-
 	virtual void Die() override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
+	virtual FVector GetCombatSocketLocation_Implementation() override;
+	/* End CombatInterface */
+
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandleDeath();
 
@@ -48,6 +51,8 @@ protected:
 
 	virtual void InitAbilityActorinfo();
 
+	bool bDead = false;
+	
 	/*
 	 * Init Primary Attributes
 	 */

@@ -91,6 +91,15 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	AuraGameplayTags.DamageTypesToResistances.Add(AuraGameplayTags.Damage_Physical, AuraGameplayTags.Attributes_Resistance_Physical);
 	AuraGameplayTags.DamageTypesToResistances.Add(AuraGameplayTags.Damage_Fire, AuraGameplayTags.Attributes_Resistance_Fire);
 
+	/*
+	 * Effects
+	 */
 	AuraGameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Effects.HitReact", "Tag granted when be hit");
+
+	/*
+	 * Abilities
+	 */
+	AuraGameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Attack", "Attack ability tag");
 }
