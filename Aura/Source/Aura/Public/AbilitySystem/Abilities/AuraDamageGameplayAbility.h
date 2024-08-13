@@ -6,6 +6,7 @@
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AuraDamageGameplayAbility.generated.h"
 
+struct FTaggedMontage;
 /**
  * 
  */
@@ -24,4 +25,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UFUNCTION(BlueprintPure)
+	FTaggedMontage GetRandomAttackMontage(const TArray<FTaggedMontage> TaggedMontages) const;
 };

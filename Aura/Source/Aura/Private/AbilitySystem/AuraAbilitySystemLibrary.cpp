@@ -134,7 +134,7 @@ void UAuraAbilitySystemLibrary::SetIsCritical(FGameplayEffectContextHandle& Effe
 
 //ApplyRadialDamageWithFalloff(...) has similar useful implementation
 void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
-                                                          TArray<AActor*>& IgnoreActors, float Radius, const FVector& SphereOrigin)
+                                                          const TArray<AActor*>& IgnoreActors, float Radius, const FVector& SphereOrigin)
 {
 	FCollisionQueryParams SphereParams;
 	SphereParams.AddIgnoredActors(IgnoreActors);
@@ -155,4 +155,12 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldCo
 			}
 		}
 	}
+}
+
+bool UAuraAbilitySystemLibrary::IsNotFriendly(AActor* FirstActor, AActor* SecondActor)
+{
+	const bool bBothPlayer = FirstActor->ActorHasTag("Player") && SecondActor->ActorHasTag("Player");
+	const bool bBothEnemy = FirstActor->ActorHasTag("Enemy") && SecondActor->ActorHasTag("Enemy");
+	const bool bFriendly = bBothPlayer || bBothEnemy;
+	return !bFriendly;
 }
