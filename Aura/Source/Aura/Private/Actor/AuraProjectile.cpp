@@ -54,6 +54,7 @@ void AAuraProjectile::Destroyed()
 			LoopingSoundComp->Stop();
 			LoopingSoundComp->DestroyComponent();
 		}
+		bHit = true;
 	}
 	Super::Destroyed();
 }
