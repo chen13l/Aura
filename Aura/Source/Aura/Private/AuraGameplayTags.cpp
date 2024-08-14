@@ -104,12 +104,24 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 		"Abilities.Attack", "Attack ability tag");
 	
 	/*
+	 * Combat
+	 */
+	AuraGameplayTags.CombatSocket_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"CombatSocket.Weapon", "Weapon");
+	AuraGameplayTags.CombatSocket_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"CombatSocket.LeftHand", "Left hand");
+	AuraGameplayTags.CombatSocket_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"CombatSocket.RightHand", "Right hand");
+
+	/*
 	 * Montage
 	 */
-	AuraGameplayTags.Montage_Attack_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		"Montage.Attack.Weapon", "Weapon");
-	AuraGameplayTags.Montage_Attack_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		"Montage.Attack.LeftHand", "Left hand");
-	AuraGameplayTags.Montage_Attack_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		"Montage.Attack.RightHand", "Right hand");
+	AuraGameplayTags.Montage_Attack_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Montage.Attack.1", "Attack 1");
+	AuraGameplayTags.Montage_Attack_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Montage.Attack.2", "Attack 2");
+	AuraGameplayTags.Montage_Attack_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Montage.Attack.3", "Attack 3");
+	AuraGameplayTags.Montage_Attack_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Montage.Attack.4", "Attack 4");
 }

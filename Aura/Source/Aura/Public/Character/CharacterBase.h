@@ -8,6 +8,7 @@
 #include "Interaction/CombatInterface.h"
 #include "CharacterBase.generated.h"
 
+class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
 class UAbilitySystemComponent;
@@ -30,6 +31,8 @@ public:
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
+	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& Tag) override;
 	/* End CombatInterface */
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -41,6 +44,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/* combat */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 
@@ -51,6 +55,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	FName RightHandSockName;
 
+	bool bDead = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	UNiagaraSystem* BloodEffect;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	USoundBase* DeathSound;
+
+	/* gas */
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
@@ -58,8 +71,6 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 
 	virtual void InitAbilityActorinfo();
-
-	bool bDead = false;
 
 	/*
 	 * Init Primary Attributes
