@@ -81,7 +81,7 @@ void AAuraEnemy::BeginPlay()
 	InitAbilityActorinfo();
 	if (HasAuthority())
 	{
-		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterCatrgory);
+		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterCategory);
 	}
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 
@@ -121,7 +121,7 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 	AuraAIController->RunBehaviorTree(BehaviorTree);
 
 	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
-	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterCatrgory != ECharacterCatrgory::Warrior);
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"), CharacterCategory != ECharacterCatrgory::Warrior);
 }
 
 void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
@@ -149,5 +149,5 @@ void AAuraEnemy::InitAbilityActorinfo()
 
 void AAuraEnemy::InitDefaultAttributeByGE() const
 {
-	UAuraAbilitySystemLibrary::InitDefaultAttributes(this, CharacterCatrgory, Level, AbilitySystemComponent);
+	UAuraAbilitySystemLibrary::InitDefaultAttributes(this, CharacterCategory, Level, AbilitySystemComponent);
 }

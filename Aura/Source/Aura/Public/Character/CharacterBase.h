@@ -54,6 +54,8 @@ protected:
 	FName LeftHandSockName;
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	FName RightHandSockName;
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	FName TailSockName;
 
 	bool bDead = false;
 

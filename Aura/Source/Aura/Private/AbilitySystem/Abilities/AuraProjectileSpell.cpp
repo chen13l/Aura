@@ -15,14 +15,13 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
+void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation, const FGameplayTag& SocketTag)
 {
 	const bool bInServer = GetAvatarActorFromActorInfo()->HasAuthority();
 	if (!bInServer) { return; }
 
 	FTransform SpawnTransform;
-	FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(),
-	                                                                           FAuraGameplayTags::Get().CombatSocket_Weapon);
+	FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), SocketTag);
 	SpawnTransform.SetLocation(SocketLocation);
 	FRotator SpawnRotation = (TargetLocation - SocketLocation).Rotation();
 	SpawnTransform.SetRotation(SpawnRotation.Quaternion());

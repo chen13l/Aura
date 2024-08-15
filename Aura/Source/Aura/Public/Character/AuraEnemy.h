@@ -69,7 +69,7 @@ protected:
 	int32 Level = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
-	ECharacterCatrgory CharacterCatrgory = ECharacterCatrgory::Warrior;
+	ECharacterCatrgory CharacterCategory = ECharacterCatrgory::Warrior;
 
 	UPROPERTY(EditDefaultsOnly, Category="AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;
