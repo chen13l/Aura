@@ -66,6 +66,16 @@ FTaggedMontage ACharacterBase::GetTaggedMontageByTag_Implementation(const FGamep
 	return FTaggedMontage();
 }
 
+int32 ACharacterBase::GetNumMinionsCount_Implementation()
+{
+	return NumMinions;
+}
+
+void ACharacterBase::IncrementMinionCount_Implementation(int32 Amount)
+{
+	NumMinions += Amount;
+}
+
 UAnimMontage* ACharacterBase::GetHitReactMontage_Implementation()
 {
 	return HitReactMontage;

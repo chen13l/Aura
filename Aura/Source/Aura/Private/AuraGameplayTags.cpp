@@ -102,6 +102,8 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	 */
 	AuraGameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Attack", "Attack ability tag");
+	AuraGameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Summon", "Summon ability tag");
 	
 	/*
 	 * Combat
