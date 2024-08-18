@@ -58,8 +58,7 @@ void UTargetDataUnderMouse::SendTargetData()
 	}
 }
 
-void UTargetDataUnderMouse::OnTargetDataReplicationCallback(const FGameplayAbilityTargetDataHandle& DataHandle,
-                                                            FGameplayTag ActivationTag)
+void UTargetDataUnderMouse::OnTargetDataReplicationCallback(const FGameplayAbilityTargetDataHandle& DataHandle,FGameplayTag ActivationTag)
 {
 	AbilitySystemComponent->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(),GetActivationPredictionKey());
 	if(ShouldBroadcastAbilityTaskDelegates())
