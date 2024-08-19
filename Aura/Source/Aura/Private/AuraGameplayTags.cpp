@@ -104,6 +104,16 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 		"Abilities.Attack", "Attack ability tag");
 	AuraGameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Summon", "Summon ability tag");
+	//Fire
+	AuraGameplayTags.Abilities_Fire_FireBolt= UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Fire.FireBolt", "FireBolt ability tag");
+	
+	/*
+	 * Cooldown
+	 */
+	//Fire
+	AuraGameplayTags.Cooldown_Fire_FireBolt= UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Cooldown.Fire.FireBolt", "FireBolt cooldown tag");
 	
 	/*
 	 * Combat
