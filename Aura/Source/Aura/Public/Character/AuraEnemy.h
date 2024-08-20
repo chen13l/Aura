@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Data/CharacterCategoryInfo.h"
 #include "Character/CharacterBase.h"
 #include "Interaction/EnemyInterface.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
@@ -31,7 +30,7 @@ public:
 	/*  End EnemyInterface  */
 
 	/*Combat Interface*/
-	virtual int32 GetPlayerLevel() const override;
+	virtual int32 GetPlayerLevel_Implementation() const override;
 	virtual void Die() override;
 	/*End Combat Interface*/
 
@@ -67,9 +66,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
 	int32 Level = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
-	ECharacterCatrgory CharacterCategory = ECharacterCatrgory::Warrior;
 
 	UPROPERTY(EditDefaultsOnly, Category="AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;

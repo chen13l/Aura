@@ -6,6 +6,8 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
+#include "AbilitySystem/Data/LevelupInfo.h"
+#include "Player/AuraPlayerState.h"
 
 void UOverlayWidgetController::BroadcastInitalValues()
 {
@@ -19,6 +21,15 @@ void UOverlayWidgetController::BroadcastInitalValues()
 
 void UOverlayWidgetController::BindCallbacksToDependencies()
 {
+	AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	AuraPlayerState->OnXPChangeDelegate.AddUObject(this, &UOverlayWidgetController::OnXPChanged);
+	AuraPlayerState->OnLevelChangeDelegate.AddLambda(
+		[this](int32 NewLevel)
+		{
+			OnLevelNumChangedDelegate.Broadcast(NewLevel);
+		}
+	);
+
 	UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute())
@@ -85,4 +96,32 @@ void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemCo
 		AbilityInfoDelegate.Broadcast(Info);
 	});
 	AuraASC->ForEachAbility(BroadcastDelegate);
+}
+
+void UOverlayWidgetController::OnXPChanged(int32 NewXP)
+{
+	AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	const ULevelupInfo* LevelUpInfo = AuraPlayerState->GetLevelUpInfo();
+
+	const int32 TargetLevel = LevelUpInfo->FindLevelForXP(NewXP);
+	const int32 MaxLevel = LevelUpInfo->LevelUpInfos.Num() - 1;
+
+	if (MaxLevel >= TargetLevel && TargetLevel > 0)
+	{
+		const int32 TargetLevelUpRequirement = LevelUpInfo->LevelUpInfos[TargetLevel].XPRequirement;
+		const int32 PrevLevelUpRequirement = LevelUpInfo->LevelUpInfos[TargetLevel - 1].XPRequirement;
+
+		const int32 DeltaXP = TargetLevelUpRequirement - PrevLevelUpRequirement;
+		const int32 XPForThisLevel = NewXP - PrevLevelUpRequirement;
+
+		const float XPBarPercent = static_cast<float>(XPForThisLevel) / static_cast<float>(DeltaXP);
+
+		OnXPPercentChangedDelegate.Broadcast(XPBarPercent);
+	}
+}
+
+void UOverlayWidgetController::OnLevelChanged(int32 NewLevel)
+{
+	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	OnLevelNumChangedDelegate.Broadcast(AuraPlayerState->GetPlayerLevel());
 }

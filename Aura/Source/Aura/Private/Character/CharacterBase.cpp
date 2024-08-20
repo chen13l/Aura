@@ -76,6 +76,11 @@ void ACharacterBase::IncrementMinionCount_Implementation(int32 Amount)
 	NumMinions += Amount;
 }
 
+ECharacterCatrgory ACharacterBase::GetCharacterCategory_Implementation()
+{
+	return CharacterCategory;
+}
+
 UAnimMontage* ACharacterBase::GetHitReactMontage_Implementation()
 {
 	return HitReactMontage;
@@ -149,6 +154,7 @@ void ACharacterBase::AddCharacterAbilities()
 
 	UAuraAbilitySystemComponent* ASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	ASC->AddCharacterAbilities(StartupAbilities);
+	ASC->AddCharacterPassiveAbilities(StartupPassiveAbilities);
 }
 
 void ACharacterBase::Dissolve()

@@ -26,7 +26,7 @@ public:
 	static const UAttributeMenuWidgetController* GetAttributeMenuWidgetController(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|CharacterDefaults")
-	static void InitDefaultAttributes(const UObject* WorldContextObject, ECharacterCatrgory CharacterCatrgory,
+	static void InitDefaultAttributes(const UObject* WorldContextObject, ECharacterCatrgory CharacterCategory,
 	                                  float Level, UAbilitySystemComponent* ASC);
 
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|CharacterDefaults")
@@ -53,4 +53,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category="AuraAbilitySystemLibrary|GameplayMechanics")
 	static bool IsNotFriendly(AActor* FirstActor, AActor* SecondActor);
+
+	UFUNCTION(BlueprintPure, Category="AuraAbilitySystemLibrary|GameplayMechanics")
+	static int32 GetXPRewardForClassAndLevel(const UObject* WorldContextObject, ECharacterCatrgory CharacterCategory, int32 CharacterLevel);
 };

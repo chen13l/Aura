@@ -7,8 +7,11 @@
 #include "AbilitySystemInterface.h"
 #include "AuraPlayerState.generated.h"
 
+class ULevelupInfo;
 class UAbilitySystemComponent;
 class UAttributeSet;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStateChange, int32);
 
 /**
  * 
@@ -24,7 +27,18 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
+	ULevelupInfo* GetLevelUpInfo() const;
+
+	FOnPlayerStateChange OnXPChangeDelegate;
+	FOnPlayerStateChange OnLevelChangeDelegate;
+
 	FORCEINLINE int32 GetPlayerLevel() const { return Level; }
+	void SetLevel(int32 InLevel);
+	void AddToLevel(int32 InLevel);
+
+	FORCEINLINE int32 GetXP() const { return XP; }
+	void SetXP(int32 InXP);
+	void AddToXP(int32 InXP);
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -34,8 +48,16 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 
 private:
-	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_Level)
+	UPROPERTY(EditDefaultsOnly, Category="AuraPlayerState")
+	TObjectPtr<ULevelupInfo> LevelUpInfos;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_Level, Category="AuraPlayerState")
 	int32 Level = 1;
 	UFUNCTION()
 	void OnRep_Level() const;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing=OnRep_XP, Category="AuraPlayerState")
+	int32 XP = 1;
+	UFUNCTION()
+	void OnRep_XP() const;
 };

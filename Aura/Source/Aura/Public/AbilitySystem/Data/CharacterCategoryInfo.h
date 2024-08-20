@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ScalableFloat.h"
 #include "Engine/DataAsset.h"
 #include "CharacterCategoryInfo.generated.h"
 
@@ -27,6 +28,9 @@ struct FCharacterCategoryDefaultInfo
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Default")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character Default")
+	FScalableFloat XPReward = FScalableFloat();
 };
 
 /**
@@ -53,5 +57,5 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Common Character Defaults|Damage")
 	TObjectPtr<UCurveTable> DamageCalculationCoefficient;
 
-	FCharacterCategoryDefaultInfo GetCharacterClassInfo(ECharacterCatrgory CharacterCatrgory);
+	FCharacterCategoryDefaultInfo GetCharacterClassDefaultInfo(ECharacterCatrgory CharacterCategory);
 };

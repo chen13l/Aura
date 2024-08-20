@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "Interaction/CombatInterface.h"
+#include "AbilitySystem/Data/CharacterCategoryInfo.h"
 #include "CharacterBase.generated.h"
 
 class UNiagaraSystem;
@@ -35,6 +36,7 @@ public:
 	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& Tag) override;
 	virtual int32 GetNumMinionsCount_Implementation() override;
 	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
+	virtual ECharacterCatrgory GetCharacterCategory_Implementation() override;
 	/* End CombatInterface */
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -45,6 +47,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
+	ECharacterCatrgory CharacterCategory = ECharacterCatrgory::Warrior;
 
 	/* combat */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
@@ -67,9 +72,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	USoundBase* DeathSound;
 
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Combat")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	int32 NumMinions = 0;
-	
+
 	/* gas */
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -113,6 +118,9 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, Category= "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
+	
+	UPROPERTY(EditDefaultsOnly, Category= "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
 
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;

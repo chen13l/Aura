@@ -47,11 +47,11 @@ const UAttributeMenuWidgetController* UAuraAbilitySystemLibrary::GetAttributeMen
 }
 
 void UAuraAbilitySystemLibrary::InitDefaultAttributes(const UObject* WorldContextObject,
-                                                      ECharacterCatrgory CharacterCatrgory, float Level,
+                                                      ECharacterCatrgory CharacterCategory, float Level,
                                                       UAbilitySystemComponent* ASC)
 {
 	UCharacterCategoryInfo* CharacterCategoryInfo = GetCharacterCategoryInfo(WorldContextObject);
-	FCharacterCategoryDefaultInfo CharacterDefaultInfo = CharacterCategoryInfo->GetCharacterClassInfo(CharacterCatrgory);
+	FCharacterCategoryDefaultInfo CharacterDefaultInfo = CharacterCategoryInfo->GetCharacterClassDefaultInfo(CharacterCategory);
 	AActor* AvatorActor = ASC->GetAvatarActor();
 
 	FGameplayEffectContextHandle PrimaryContext = ASC->MakeEffectContext();
@@ -73,21 +73,34 @@ void UAuraAbilitySystemLibrary::InitDefaultAttributes(const UObject* WorldContex
 void UAuraAbilitySystemLibrary::GiveStartupAbilities(UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterCatrgory CharacterCatrgory)
 {
 	UCharacterCategoryInfo* CharacterCategoryInfo = GetCharacterCategoryInfo(WorldContextObject);
+	if (CharacterCategoryInfo == nullptr) { return; }
 	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterCategoryInfo->CommonAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(AbilitySpec);
 	}
 
-	const FCharacterCategoryDefaultInfo& DefaultInfo = CharacterCategoryInfo->GetCharacterClassInfo(CharacterCatrgory);
+	const FCharacterCategoryDefaultInfo& DefaultInfo = CharacterCategoryInfo->GetCharacterClassDefaultInfo(CharacterCatrgory);
 	for (TSubclassOf<UGameplayAbility> AbilityClass : DefaultInfo.StartupAbilities)
 	{
-		if (ICombatInterface* CombatInterface = Cast<ICombatInterface>(ASC->GetAvatarActor()))
+		if (ASC->GetAvatarActor()->Implements<UCombatInterface>())
 		{
-			FGameplayAbilitySpec AbilitySpec(AbilityClass, CombatInterface->GetPlayerLevel());
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, ICombatInterface::Execute_GetPlayerLevel(ASC->GetAvatarActor()));
 			ASC->GiveAbility(AbilitySpec);
 		}
 	}
+}
+
+int32 UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject, ECharacterCatrgory CharacterCategory,
+                                                             int32 CharacterLevel)
+{
+	UCharacterCategoryInfo* CharacterCategoryInfo = GetCharacterCategoryInfo(WorldContextObject);
+	if (CharacterCategoryInfo == nullptr) { return 0; }
+
+	FCharacterCategoryDefaultInfo Info = CharacterCategoryInfo->GetCharacterClassDefaultInfo(CharacterCategory);
+	const float XPReward = Info.XPReward.GetValueAtLevel(CharacterLevel);
+
+	return static_cast<int32>(XPReward);
 }
 
 UCharacterCategoryInfo* UAuraAbilitySystemLibrary::GetCharacterCategoryInfo(const UObject* WorldContextObject)

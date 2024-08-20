@@ -47,6 +47,12 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 		"Attributes.Secondary.MaxMana", "Maximum amount of Mana obtainable");
 
 	/*
+	 * Meta Attributes
+	 */
+	AuraGameplayTags.Attribute_Meta_IncomingXP = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Attributes.Meta.IncomingXP", "IncomingXp meta attribute");
+
+	/*
 	 * Input Tags
 	 */
 	AuraGameplayTags.InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(
@@ -105,16 +111,16 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	AuraGameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Summon", "Summon ability tag");
 	//Fire
-	AuraGameplayTags.Abilities_Fire_FireBolt= UGameplayTagsManager::Get().AddNativeGameplayTag(
+	AuraGameplayTags.Abilities_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Fire.FireBolt", "FireBolt ability tag");
-	
+
 	/*
 	 * Cooldown
 	 */
 	//Fire
-	AuraGameplayTags.Cooldown_Fire_FireBolt= UGameplayTagsManager::Get().AddNativeGameplayTag(
+	AuraGameplayTags.Cooldown_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Cooldown.Fire.FireBolt", "FireBolt cooldown tag");
-	
+
 	/*
 	 * Combat
 	 */
