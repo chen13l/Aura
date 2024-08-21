@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "AuraWidgetController.generated.h"
 
 class UAbilitySystemComponent;
@@ -36,6 +35,8 @@ struct FWidgetControllerParams
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UAttributeSet> AttributeSet;
 };
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnplayerStateChangedSignature, int32, NewData);
 
 UCLASS()
 class AURA_API UAuraWidgetController : public UObject

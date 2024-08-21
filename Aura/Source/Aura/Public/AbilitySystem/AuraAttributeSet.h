@@ -78,7 +78,7 @@ public:
 	UAuraAttributeSet();
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	//Attributes needs to be added to GetLifetimeReplicatedProps
@@ -237,4 +237,7 @@ private:
 	void ShowFloatingText(const FEffectProperties& Props, float Damage,  bool bBlockedHit, bool bCriticalHit)const;
 
 	void SendXPEvent(const FEffectProperties& Props);
+
+	bool bTopOffHealth = false;
+	bool bTopOffMana = false;
 };

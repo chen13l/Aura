@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "AttributeMenuWidgetController.generated.h"
 
@@ -26,6 +27,12 @@ public:
 
 	virtual void BindCallbacksToDependencies() override;
 	virtual void BroadcastInitalValues() override;
+
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FOnplayerStateChangedSignature OnAttributePointsChangedDelegate;
+
+	UFUNCTION(BlueprintCallable)
+	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

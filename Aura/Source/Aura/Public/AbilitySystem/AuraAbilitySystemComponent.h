@@ -35,11 +35,15 @@ public:
 	FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& Spec);
 	FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& Spec);
 
+	void UpgradeAttribute(const FGameplayTag& AttributeTag);
+
+	UFUNCTION(Server,Reliable)
+	void ServerUpgradeAttribute(const FGameplayTag& AttributeTag);
 protected:
 	bool bStartupAbilitiesGiven = false;
 
 	virtual void OnRep_ActivateAbilities() override;
-	
+
 	UFUNCTION(Client, Reliable)
 	void ClientEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GameplayEffectSpec,
 	                         FActiveGameplayEffectHandle ActiveGameplayEffectHandle);
