@@ -26,7 +26,7 @@ public:
 	FAttributeInfoSignature AttributeInfoDelegate;
 
 	virtual void BindCallbacksToDependencies() override;
-	virtual void BroadcastInitalValues() override;
+	virtual void BroadcastInitialValues() override;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnplayerStateChangedSignature OnAttributePointsChangedDelegate;

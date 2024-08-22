@@ -30,7 +30,7 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 	);
 }
 
-void UAttributeMenuWidgetController::BroadcastInitalValues()
+void UAttributeMenuWidgetController::BroadcastInitialValues()
 {
 	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
 	check(AttributeInfo);
