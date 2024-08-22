@@ -29,6 +29,7 @@ void UAuraWidgetController::BroadcastAbilityInfo()
 	{
 		FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(GetAuraASC()->GetAbilityTagFromSpec(Spec));
 		Info.InputTag = GetAuraASC()->GetInputTagFromSpec(Spec);
+		Info.StatusTag = GetAuraASC()->GetStatusTagFromSpec(Spec);
 		AbilityInfoDelegate.Broadcast(Info);
 	});
 	GetAuraASC()->ForEachAbility(BroadcastDelegate);

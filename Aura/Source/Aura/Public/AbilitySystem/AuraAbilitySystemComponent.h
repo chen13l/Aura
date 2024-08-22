@@ -32,8 +32,10 @@ public:
 	FORCEINLINE bool IsStartupAbilitiesGiven() const { return bStartupAbilitiesGiven; }
 	void ForEachAbility(const FForEachAbility& Delegate);
 
-	FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& Spec);
-	FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& Spec);
+	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& Spec);
+	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& Spec);
+	static FGameplayTag GetStatusTagFromSpec(const FGameplayAbilitySpec& Spec);
+	
 
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 

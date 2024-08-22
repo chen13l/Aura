@@ -114,9 +114,30 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 		"Abilities.Attack", "Attack ability tag");
 	AuraGameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Summon", "Summon ability tag");
+	AuraGameplayTags.Abilities_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.HitReact", "HitReact Ability");
+
 	//Fire
 	AuraGameplayTags.Abilities_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
-		"Abilities.Fire.FireBolt", "FireBolt ability tag");
+		"Abilities.Fire.FireBolt", "FireBolt Ability Tag");
+	
+//Status
+	AuraGameplayTags.Abilities_Status_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Status.Locked", "Locked Status");
+	AuraGameplayTags.Abilities_Status_Eligible = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Status.Eligible", "Eligible Status");
+	AuraGameplayTags.Abilities_Status_UnLocked = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Status.UnLocked", "UnLocked Status");
+	AuraGameplayTags.Abilities_Status_Equipped = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Status.Equipped", "Equipped Status");
+	
+	//Types
+	AuraGameplayTags.Abilities_Type_Offensive = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Type.Offensive", "Type Offensive");
+	AuraGameplayTags.Abilities_Type_Passive = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Type.Passive", "Type Passive");
+	AuraGameplayTags.Abilities_Type_None = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Type.None", "Type None");
 
 	/*
 	 * Cooldown
