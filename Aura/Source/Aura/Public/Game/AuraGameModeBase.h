@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "AuraGameModeBase.generated.h"
 
+class UAbilityInfo;
 class UCharacterCategoryInfo;
 /**
  * 
@@ -18,5 +19,7 @@ class AURA_API AAuraGameModeBase : public AGameModeBase
 public:
 	UPROPERTY(EditDefaultsOnly, Category="Character Category Default")
 	TObjectPtr<UCharacterCategoryInfo> CharacterCategoryInfo;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category="Ability Info")
+	TObjectPtr<UAbilityInfo> AbilityInfo;
 };

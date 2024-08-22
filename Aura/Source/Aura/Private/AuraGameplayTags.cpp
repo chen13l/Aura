@@ -120,6 +120,10 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	//Fire
 	AuraGameplayTags.Abilities_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Fire.FireBolt", "FireBolt Ability Tag");
+
+	//Lightning
+	AuraGameplayTags.Abilities_Lightning_Electrocute = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Lightning.Electrocute", "Electrocute Ability Tag");
 	
 //Status
 	AuraGameplayTags.Abilities_Status_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(

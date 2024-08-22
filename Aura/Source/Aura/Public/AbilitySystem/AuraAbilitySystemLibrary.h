@@ -7,6 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
+class UAbilityInfo;
 class UOverlayWidgetController;
 class AAuraHUD;
 class USpellMenuWidgetController;
@@ -47,9 +48,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|CharacterDefaults")
 	static void GiveStartupAbilities(UObject* WorldContextObject, UAbilitySystemComponent* ASC, ECharacterCatrgory CharacterCatrgory);
 
+	/*
+	 * Info
+	 */
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|CharacterDefaults")
 	static UCharacterCategoryInfo* GetCharacterCategoryInfo(const UObject* WorldContextObject);
 
+	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|Ability")
+	static UAbilityInfo* GetAbilityInfo(const UObject* WorldContextObject);
 	/*
 	 * GameplayEffects
 	 */
