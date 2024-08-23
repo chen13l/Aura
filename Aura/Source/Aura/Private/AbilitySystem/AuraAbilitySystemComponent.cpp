@@ -80,7 +80,7 @@ void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate
 	{
 		if (!Delegate.ExecuteIfBound(Spec))
 		{
-			UE_LOG(Log_Aura, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__);
+			UE_LOG(LogAura, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__);
 		}
 	}
 }
@@ -163,6 +163,27 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatus(int32 Level)
 			}
 		}
 	}
+}
+
+bool UAuraAbilitySystemComponent::GetDescriptionByAbilityTag(const FGameplayTag& AbilityTag, FString& Description, FString& NextLevelDescription)
+{
+	if(const FGameplayAbilitySpec* Spec = GetAbilitySpecFromTag(AbilityTag))
+	{
+		if(UAuraGameplayAbility* AuraAbility = Cast<UAuraGameplayAbility>(Spec->Ability))
+		{
+			Description = AuraAbility->GetSpellDescription(AuraAbility->GetAbilityLevel());
+			NextLevelDescription = AuraAbility->GetNextLeveSpellDescription(AuraAbility->GetAbilityLevel()+1);
+			return true;
+		}
+	}
+	UAbilityInfo* Info = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
+	if(Info)
+	{
+		Description = UAuraGameplayAbility::GetLockedDescription(Info->FindAbilityInfoByTag(AbilityTag).LevelRequirement);
+		NextLevelDescription = FString();
+	}
+
+	return false;
 }
 
 void UAuraAbilitySystemComponent::ServerSpendSpellPoints_Implementation(const FGameplayTag& AbilityTag)
