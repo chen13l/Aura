@@ -110,6 +110,9 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	/*
 	 * Abilities
 	 */
+	AuraGameplayTags.Abilities_None = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.None", "None ability - like nullptr");
+	
 	AuraGameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Attack", "Attack ability tag");
 	AuraGameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(

@@ -138,6 +138,9 @@ void AAuraCharacter::AddToAttributePoints_Implementation(int32 InPoints)
 
 void AAuraCharacter::AddToSpellPoints_Implementation(int32 InPoints)
 {
+	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	AuraPlayerState->AddToSpellPoints(InPoints);
 }
 
 int32 AAuraCharacter::GetAttributePoints_Implementation() const
