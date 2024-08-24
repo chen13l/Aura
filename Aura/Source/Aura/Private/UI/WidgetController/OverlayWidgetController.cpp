@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/OverlayWidgetController.h"
 
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
@@ -26,6 +27,8 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 			OnLevelNumChangedDelegate.Broadcast(NewLevel);
 		}
 	);
+
+	GetAuraASC()->OnEquippedAbilityDelegate.AddUObject(this, &UOverlayWidgetController::OnAbilityEquipped);
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetAuraAS()->GetHealthAttribute())
 	                      .AddLambda([this](const FOnAttributeChangeData& Data)
@@ -104,4 +107,21 @@ void UOverlayWidgetController::OnXPChanged(int32 NewXP)
 void UOverlayWidgetController::OnLevelChanged(int32 NewLevel)
 {
 	OnLevelNumChangedDelegate.Broadcast(GetAuraPS()->GetPlayerLevel());
+}
+
+void UOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& TargetSlotTag,
+                                                 const FGameplayTag& PrevSlotTag)
+{
+	const FAuraGameplayTags& Tags = FAuraGameplayTags::Get();
+	//for clear slot target that has been before
+	FAuraAbilityInfo ClearLastSlotInfo;
+	ClearLastSlotInfo.StatusTag = Tags.Abilities_Status_UnLocked;
+	ClearLastSlotInfo.InputTag = PrevSlotTag;
+	ClearLastSlotInfo.AbilityTag = Tags.Abilities_None;
+	AbilityInfoDelegate.Broadcast(ClearLastSlotInfo);
+
+	FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(AbilityTag);
+	Info.StatusTag = StatusTag;
+	Info.InputTag = TargetSlotTag;
+	AbilityInfoDelegate.Broadcast(Info);
 }

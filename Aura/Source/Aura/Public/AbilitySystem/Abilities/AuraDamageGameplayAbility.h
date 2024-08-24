@@ -30,4 +30,8 @@ protected:
 	FTaggedMontage GetRandomAttackMontage(const TArray<FTaggedMontage> TaggedMontages) const;
 
 	float GetDamageByDamageType(float InLevel, const FGameplayTag& DamageType) const;
+
+	FString AbilityName = FString();
+	FString NextLevelString = FString();
+	bool bCallGetNextLevelinfo = false;
 };

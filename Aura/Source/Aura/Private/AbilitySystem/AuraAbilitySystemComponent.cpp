@@ -80,7 +80,7 @@ void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate
 	{
 		if (!Delegate.ExecuteIfBound(Spec))
 		{
-			UE_LOG(LogAura, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__);
+			UE_LOG(Log_Aura, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__);
 		}
 	}
 }
@@ -121,6 +121,24 @@ FGameplayTag UAuraAbilitySystemComponent::GetStatusTagFromSpec(const FGameplayAb
 	return FGameplayTag();
 }
 
+FGameplayTag UAuraAbilitySystemComponent::GetStatusTagByAbilityTag(const FGameplayTag& AbilityTag)
+{
+	if (const FGameplayAbilitySpec* Spec = GetAbilitySpecFromTag(AbilityTag))
+	{
+		return GetStatusTagFromSpec(*Spec);
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UAuraAbilitySystemComponent::GetInputTagByAbilityTag(const FGameplayTag& AbilityTag)
+{
+	if (const FGameplayAbilitySpec* Spec = GetAbilitySpecFromTag(AbilityTag))
+	{
+		return GetInputTagFromSpec(*Spec);
+	}
+	return FGameplayTag();
+}
+
 FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetAbilitySpecFromTag(const FGameplayTag& AbilityTag)
 {
 	FScopedAbilityListLock AbilityListLock(*this);
@@ -145,6 +163,72 @@ void UAuraAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& Attribute
 	}
 }
 
+void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& SlotTag)
+{
+	if (FGameplayAbilitySpec* AbilitySpec = GetAbilitySpecFromTag(AbilityTag))
+	{
+		const FGameplayTag& PrevSlot = GetInputTagFromSpec(*AbilitySpec);
+		const FGameplayTag& StatusTag = GetStatusTagFromSpec(*AbilitySpec);
+
+		const FAuraGameplayTags Tags = FAuraGameplayTags::Get();
+		const bool bStatusValid = StatusTag.MatchesTagExact(Tags.Abilities_Status_UnLocked) || StatusTag.MatchesTagExact(
+			Tags.Abilities_Status_Equipped);
+		if (bStatusValid)
+		{
+			// remove target InputTag(slot) from any Abilities that has it
+			ClearAbilitiesOfSlot(SlotTag);
+			// clear target ability's slot, just in case, it's a different slot
+			ClearSlot(*AbilitySpec);
+			// assign target ability to target slot
+			AbilitySpec->DynamicAbilityTags.AddTag(SlotTag);
+			if (StatusTag.MatchesTagExact(Tags.Abilities_Status_UnLocked))
+			{
+				AbilitySpec->DynamicAbilityTags.RemoveTag(Tags.Abilities_Status_UnLocked);
+				AbilitySpec->DynamicAbilityTags.AddTag(Tags.Abilities_Status_Equipped);
+			}
+			MarkAbilitySpecDirty(*AbilitySpec);
+		}
+		ClientEquippedAbility(AbilityTag, Tags.Abilities_Status_Equipped, SlotTag, PrevSlot);
+	}
+}
+
+void UAuraAbilitySystemComponent::ClientEquippedAbility_Implementation(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag,
+                                                                       const FGameplayTag& NewSlotTag, const FGameplayTag& PrevSlotTag)
+{
+	OnEquippedAbilityDelegate.Broadcast(AbilityTag, StatusTag, NewSlotTag, PrevSlotTag);
+}
+
+void UAuraAbilitySystemComponent::ClearSlot(FGameplayAbilitySpec& AbilitySpec)
+{
+	const FGameplayTag SlotTag = GetInputTagFromSpec(AbilitySpec);
+	AbilitySpec.DynamicAbilityTags.RemoveTag(SlotTag);
+	MarkAbilitySpecDirty(AbilitySpec);
+}
+
+void UAuraAbilitySystemComponent::ClearAbilitiesOfSlot(const FGameplayTag& SlotTag)
+{
+	FScopedAbilityListLock ActiveScopeLock(*this);
+	for (FGameplayAbilitySpec& Spec : GetActivatableAbilities())
+	{
+		if (AbilityHasSlot(&Spec, SlotTag))
+		{
+			ClearSlot(Spec);
+		}
+	}
+}
+
+bool UAuraAbilitySystemComponent::AbilityHasSlot(FGameplayAbilitySpec* AbilitySpec, const FGameplayTag& SlotTag)
+{
+	for (FGameplayTag Tag : AbilitySpec->DynamicAbilityTags)
+	{
+		if (Tag.MatchesTagExact(SlotTag))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 void UAuraAbilitySystemComponent::UpdateAbilityStatus(int32 Level)
 {
 	if (UAbilityInfo* AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor()))
@@ -167,19 +251,26 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatus(int32 Level)
 
 bool UAuraAbilitySystemComponent::GetDescriptionByAbilityTag(const FGameplayTag& AbilityTag, FString& Description, FString& NextLevelDescription)
 {
-	if(const FGameplayAbilitySpec* Spec = GetAbilitySpecFromTag(AbilityTag))
+	if (const FGameplayAbilitySpec* Spec = GetAbilitySpecFromTag(AbilityTag))
 	{
-		if(UAuraGameplayAbility* AuraAbility = Cast<UAuraGameplayAbility>(Spec->Ability))
+		if (UAuraGameplayAbility* AuraAbility = Cast<UAuraGameplayAbility>(Spec->Ability))
 		{
 			Description = AuraAbility->GetSpellDescription(AuraAbility->GetAbilityLevel());
-			NextLevelDescription = AuraAbility->GetNextLeveSpellDescription(AuraAbility->GetAbilityLevel()+1);
+			NextLevelDescription = AuraAbility->GetNextLeveSpellDescription(AuraAbility->GetAbilityLevel() + 1);
 			return true;
 		}
 	}
 	UAbilityInfo* Info = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
-	if(Info)
+	if (Info)
 	{
-		Description = UAuraGameplayAbility::GetLockedDescription(Info->FindAbilityInfoByTag(AbilityTag).LevelRequirement);
+		if (!AbilityTag.IsValid() || AbilityTag.MatchesTagExact(FAuraGameplayTags::Get().Abilities_None))
+		{
+			Description = FString();
+		}
+		else
+		{
+			Description = UAuraGameplayAbility::GetLockedDescription(Info->FindAbilityInfoByTag(AbilityTag).LevelRequirement);
+		}
 		NextLevelDescription = FString();
 	}
 

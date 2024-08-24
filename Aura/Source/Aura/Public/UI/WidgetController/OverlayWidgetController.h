@@ -75,6 +75,9 @@ protected:
 	/* for XP, Level */
 	void OnXPChanged(int32 NewXP);
 	void OnLevelChanged(int32 NewLevel);
+
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag, const FGameplayTag& TargetSlotTag,
+						   const FGameplayTag& PrevSlotTag);
 };
 
 template <typename T>
