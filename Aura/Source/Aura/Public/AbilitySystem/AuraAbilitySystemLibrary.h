@@ -75,6 +75,8 @@ public:
 	static float GetDebuffFrequnecy(const FGameplayEffectContextHandle& EffectContextHandle);
 	UFUNCTION(BlueprintPure, Category="AuraAbilitySystemLibrary|GameplayEffects")
 	static FGameplayTag GetDamageType(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintPure, Category="AuraAbilitySystemLibrary|GameplayEffects")
+	static FVector GetDeathImpulseVector(const FGameplayEffectContextHandle& EffectContextHandle);
 
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetIsBlockedHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, bool bInIsblockedHit);
@@ -90,9 +92,11 @@ public:
 	static void SetDebuffFrequency(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, float InDebuffFrequency);
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|GameplayEffects")
 	static void SetDamageType(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const FGameplayTag& InDamageType);
+	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|GameplayEffects")
+	static void SetDeathImpulseVector(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle,FVector InImpulseVector);
 
 	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|DamageEffect")
-	static FGameplayEffectContextHandle ApplayDamageEffect(const FAuraDamageEffectParams& Params);
+	static FGameplayEffectContextHandle ApplyDamageEffect(const FAuraDamageEffectParams& Params);
 	/*
 	 * GameplayMechanics
 	 */

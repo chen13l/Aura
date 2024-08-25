@@ -32,6 +32,7 @@ FAuraDamageEffectParams UAuraDamageGameplayAbility::MakeAuraDamageEffectParams(A
 	Params.WorldContextObject = GetAvatarActorFromActorInfo();
 	Params.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
 	Params.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	Params.DeathImpulseMagnitude = DeathImpulseMagnitude;
 
 	return Params;
 }

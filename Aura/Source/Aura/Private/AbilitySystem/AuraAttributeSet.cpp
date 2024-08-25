@@ -93,7 +93,7 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 			ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatorActor);
 			if (CombatInterface)
 			{
-				CombatInterface->Die();
+				CombatInterface->Die(UAuraAbilitySystemLibrary::GetDeathImpulseVector(Props.GameplayEffectContextHandle));
 			}
 			SendXPEvent(Props);
 		}

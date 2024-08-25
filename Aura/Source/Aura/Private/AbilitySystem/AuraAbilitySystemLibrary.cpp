@@ -206,6 +206,15 @@ FGameplayTag UAuraAbilitySystemLibrary::GetDamageType(const FGameplayEffectConte
 	return FGameplayTag();
 }
 
+FVector UAuraAbilitySystemLibrary::GetDeathImpulseVector(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return AuraGameplayEffectContext->GetDeathImpulseVector();
+	}
+	return FVector::ZeroVector;
+}
+
 void UAuraAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsblockedHit)
 {
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
@@ -262,6 +271,14 @@ void UAuraAbilitySystemLibrary::SetDamageType(FGameplayEffectContextHandle& Effe
 	}
 }
 
+void UAuraAbilitySystemLibrary::SetDeathImpulseVector(FGameplayEffectContextHandle& EffectContextHandle, FVector InImpulseVector)
+{
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetDeathImpulseVector(InImpulseVector);
+	}
+}
+
 //ApplyRadialDamageWithFalloff(...) has similar useful implementation
 void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
                                                           const TArray<AActor*>& IgnoreActors, float Radius, const FVector& SphereOrigin)
@@ -287,21 +304,22 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldCo
 	}
 }
 
-FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplayDamageEffect(const FAuraDamageEffectParams& Params)
+FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const FAuraDamageEffectParams& Params)
 {
 	const FAuraGameplayTags& Tags = FAuraGameplayTags::Get();
 	const AActor* SourceActor = Params.SourceAbilitySystemComponent->GetAvatarActor();
 
 	FGameplayEffectContextHandle EffectContext = Params.SourceAbilitySystemComponent->MakeEffectContext();
 	EffectContext.AddSourceObject(SourceActor);
+	SetDeathImpulseVector(EffectContext, Params.DeathImpulseVector);
 	FGameplayEffectSpecHandle SpecHandle = Params.SourceAbilitySystemComponent->MakeOutgoingSpec(
 		Params.DamageEffectClass, Params.AbilityLevel, EffectContext);
 
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Params.DamageType, Params.BaseDamage);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Tags.Debuff_Related_Chance,Params.DebuffChance);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Tags.Debuff_Related_Duration,Params.DebuffDuration);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Tags.Debuff_Related_Damage,Params.DebuffDamage);
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Tags.Debuff_Related_Frequency,Params.DebuffFrequency);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Tags.Debuff_Related_Chance, Params.DebuffChance);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Tags.Debuff_Related_Duration, Params.DebuffDuration);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Tags.Debuff_Related_Damage, Params.DebuffDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Tags.Debuff_Related_Frequency, Params.DebuffFrequency);
 
 	Params.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
 
