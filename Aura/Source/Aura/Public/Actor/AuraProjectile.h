@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AuraAbilityTypes.h"
 #include "GameplayEffectTypes.h"
 #include "GameFramework/Actor.h"
 #include "AuraProjectile.generated.h"
@@ -21,10 +22,11 @@ public:
 	AAuraProjectile();
 
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess, ExposeOnSpawn= true))
-	FGameplayEffectSpecHandle DamageSpecHandle;
+	FAuraDamageEffectParams DamageEffectParams;
 
 protected:
 	virtual void BeginPlay() override;
+	void OnHit();
 	virtual void Destroyed() override;
 
 	UFUNCTION()

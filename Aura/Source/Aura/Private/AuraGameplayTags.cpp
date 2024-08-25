@@ -85,6 +85,32 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	AuraGameplayTags.Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Damage.Physical", "Physical damage type");
 
+	/* Debuff Related */
+	AuraGameplayTags.Debuff_Related_Chance = UGameplayTagsManager::Get().AddNativeGameplayTag(
+			"Debuff.Related.Chance", "Debuff Chance");
+	AuraGameplayTags.Debuff_Related_Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+			"Debuff.Related.Damage", "Debuff Damage");
+	AuraGameplayTags.Debuff_Related_Frequency = UGameplayTagsManager::Get().AddNativeGameplayTag(
+			"Debuff.Related.Frequency", "Debuff Frequency");
+	AuraGameplayTags.Debuff_Related_Duration = UGameplayTagsManager::Get().AddNativeGameplayTag(
+			"Debuff.Related.Duration", "Debuff Duration");
+	
+	/* Debuff Type */
+	AuraGameplayTags.Debuff_Burn = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Debuff.Burn", "Debuff for Fire Damage");
+	AuraGameplayTags.Debuff_Stun = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Debuff.Stun", "Debuff for Lightning Damage");
+	AuraGameplayTags.Debuff_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Debuff.Arcane", "Debuff for Arcane Damage");
+	AuraGameplayTags.Debuff_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Debuff.Physical", "Debuff for Physical Damage");
+
+	// Map Debuff to damage types
+	AuraGameplayTags.DamageTypesToDebuff.Add(AuraGameplayTags.Damage_Fire, AuraGameplayTags.Debuff_Burn);
+	AuraGameplayTags.DamageTypesToDebuff.Add(AuraGameplayTags.Damage_Lightning, AuraGameplayTags.Debuff_Stun);
+	AuraGameplayTags.DamageTypesToDebuff.Add(AuraGameplayTags.Damage_Arcane, AuraGameplayTags.Debuff_Arcane);
+	AuraGameplayTags.DamageTypesToDebuff.Add(AuraGameplayTags.Damage_Physical, AuraGameplayTags.Debuff_Physical);
+
 	/* Resistance Type */
 	AuraGameplayTags.Attributes_Resistance_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Attributes.Resistance.Fire", "Resistance for Fire damage");
@@ -112,7 +138,7 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	 */
 	AuraGameplayTags.Abilities_None = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.None", "None ability - like nullptr");
-	
+
 	AuraGameplayTags.Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Attack", "Attack ability tag");
 	AuraGameplayTags.Abilities_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(
@@ -127,8 +153,8 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	//Lightning
 	AuraGameplayTags.Abilities_Lightning_Electrocute = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Lightning.Electrocute", "Electrocute Ability Tag");
-	
-//Status
+
+	//Status
 	AuraGameplayTags.Abilities_Status_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Status.Locked", "Locked Status");
 	AuraGameplayTags.Abilities_Status_Eligible = UGameplayTagsManager::Get().AddNativeGameplayTag(
@@ -137,7 +163,7 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 		"Abilities.Status.UnLocked", "UnLocked Status");
 	AuraGameplayTags.Abilities_Status_Equipped = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Status.Equipped", "Equipped Status");
-	
+
 	//Types
 	AuraGameplayTags.Abilities_Type_Offensive = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Type.Offensive", "Type Offensive");

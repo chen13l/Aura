@@ -7,6 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AuraAbilitySystemLibrary.generated.h"
 
+struct FAuraDamageEffectParams;
 class UAbilityInfo;
 class UOverlayWidgetController;
 class AAuraHUD;
@@ -75,6 +76,8 @@ public:
 	static void GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
 	                                      const TArray<AActor*>& IgnoreActors, float Radius, const FVector& SphereOrigin);
 
+	UFUNCTION(BlueprintCallable, Category="AuraAbilitySystemLibrary|DamageEffect")
+	static FGameplayEffectContextHandle ApplayDamageEffect(const FAuraDamageEffectParams& Params);
 	/*
 	 * GameplayMechanics
 	 */

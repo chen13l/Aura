@@ -43,28 +43,8 @@ void AAuraProjectile::BeginPlay()
 	LoopingSoundComp = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
 }
 
-void AAuraProjectile::Destroyed()
+void AAuraProjectile::OnHit()
 {
-	if (!bHit && !HasAuthority())
-	{
-		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-		if (LoopingSoundComp)
-		{
-			LoopingSoundComp->Stop();
-			LoopingSoundComp->DestroyComponent();
-		}
-		bHit = true;
-	}
-	Super::Destroyed();
-}
-
-void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-                                      const FHitResult& HitResult)
-{
-	if (!DamageSpecHandle.Data.IsValid() || DamageSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor) { return; }
-	if (!UAuraAbilitySystemLibrary::IsNotFriendly(DamageSpecHandle.Data.Get()->GetContext().GetEffectCauser(), OtherActor)) { return; }
 	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
 	if (LoopingSoundComp)
@@ -72,14 +52,30 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActo
 		LoopingSoundComp->Stop();
 		LoopingSoundComp->DestroyComponent();
 	}
-	Sphere->IgnoreActorWhenMoving(GetOwner(), true);
+	bHit = true;
+}
+
+void AAuraProjectile::Destroyed()
+{
+	if (!bHit && !HasAuthority()) { OnHit(); }
+	Super::Destroyed();
+}
+
+void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                      const FHitResult& HitResult)
+{
+	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
+	if (SourceAvatarActor == OtherActor) { return; }
+	if (!UAuraAbilitySystemLibrary::IsNotFriendly(SourceAvatarActor, OtherActor)) { return; }
+	if (!bHit) { OnHit(); }
 	if (HasAuthority())
 	{
 		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
 		{
-			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageSpecHandle.Data.Get());
+			DamageEffectParams.TargetAbilitySystemComponent = TargetASC;
+			UAuraAbilitySystemLibrary::ApplayDamageEffect(DamageEffectParams);
 		}
-
 		Destroy();
 	}
 	else { bHit = true; }

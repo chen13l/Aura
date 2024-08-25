@@ -3,7 +3,9 @@
 
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AuraAbilityTypes.h"
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Game/AuraGameModeBase.h"
 #include "Interaction/CombatInterface.h"
@@ -40,7 +42,7 @@ const UOverlayWidgetController* UAuraAbilitySystemLibrary::GetOverlayWidgetContr
 {
 	FWidgetControllerParams WCParams;
 	AAuraHUD* AuraHUD = nullptr;
-	if(MakeWidgetControllerParams(WorldContextObject,WCParams,AuraHUD))
+	if (MakeWidgetControllerParams(WorldContextObject, WCParams, AuraHUD))
 	{
 		return AuraHUD->GetOverlayWidgetController(WCParams);
 	}
@@ -51,7 +53,7 @@ const UAttributeMenuWidgetController* UAuraAbilitySystemLibrary::GetAttributeMen
 {
 	FWidgetControllerParams WCParams;
 	AAuraHUD* AuraHUD = nullptr;
-	if(MakeWidgetControllerParams(WorldContextObject,WCParams,AuraHUD))
+	if (MakeWidgetControllerParams(WorldContextObject, WCParams, AuraHUD))
 	{
 		return AuraHUD->GetAttributeMenuWidgetController(WCParams);
 	}
@@ -62,7 +64,7 @@ const USpellMenuWidgetController* UAuraAbilitySystemLibrary::GetSpellMenuWidgetC
 {
 	FWidgetControllerParams WCParams;
 	AAuraHUD* AuraHUD = nullptr;
-	if(MakeWidgetControllerParams(WorldContextObject,WCParams,AuraHUD))
+	if (MakeWidgetControllerParams(WorldContextObject, WCParams, AuraHUD))
 	{
 		return AuraHUD->GetSpellMenuWidgetController(WCParams);
 	}
@@ -198,6 +200,27 @@ void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldCo
 			}
 		}
 	}
+}
+
+FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplayDamageEffect(const FAuraDamageEffectParams& Params)
+{
+	const FAuraGameplayTags& Tags = FAuraGameplayTags::Get();
+	const AActor* SourceActor = Params.SourceAbilitySystemComponent->GetAvatarActor();
+
+	FGameplayEffectContextHandle EffectContext = Params.SourceAbilitySystemComponent->MakeEffectContext();
+	EffectContext.AddSourceObject(SourceActor);
+	FGameplayEffectSpecHandle SpecHandle = Params.SourceAbilitySystemComponent->MakeOutgoingSpec(
+		Params.DamageEffectClass, Params.AbilityLevel, EffectContext);
+
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Params.DamageType, Params.BaseDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Tags.Debuff_Related_Chance,Params.DebuffChance);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Tags.Debuff_Related_Duration,Params.DebuffDuration);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Tags.Debuff_Related_Damage,Params.DebuffDamage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle,Tags.Debuff_Related_Frequency,Params.DebuffFrequency);
+
+	Params.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data);
+
+	return EffectContext;
 }
 
 bool UAuraAbilitySystemLibrary::IsNotFriendly(AActor* FirstActor, AActor* SecondActor)

@@ -10,13 +10,30 @@
 void UAuraDamageGameplayAbility::CauseDamage(AActor* Actor)
 {
 	FGameplayEffectSpecHandle DamageSpecHandle = MakeOutgoingGameplayEffectSpec(DamageEffectClass, 1.f);
-	for (auto [DamageTag,DamageFloat] : DamageTypes)
-	{
-		float FloatMagnitude = DamageFloat.GetValueAtLevel(GetAbilityLevel());
-		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DamageTag, FloatMagnitude);
-	}
+
+	float FloatMagnitude = Damage.GetValueAtLevel(GetAbilityLevel());
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamageSpecHandle, DamageTypeTag, FloatMagnitude);
+
 	GetAbilitySystemComponentFromActorInfo()->ApplyGameplayEffectSpecToTarget(*DamageSpecHandle.Data.Get(),
 	                                                                          UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor));
+}
+
+FAuraDamageEffectParams UAuraDamageGameplayAbility::MakeAuraDamageEffectParams(AActor* TargetActor)
+{
+	FAuraDamageEffectParams Params;
+	Params.AbilityLevel = GetAbilityLevel();
+	Params.BaseDamage = Damage.GetValueAtLevel(GetAbilityLevel());
+	Params.DamageType = DamageTypeTag;
+	Params.DebuffChance = DebuffChance;
+	Params.DebuffDamage = DdebuffDamage;
+	Params.DebuffDuration = DebuffDuration;
+	Params.DebuffFrequency = DebuffFrequency;
+	Params.DamageEffectClass  = DamageEffectClass;
+	Params.WorldContextObject = GetAvatarActorFromActorInfo();
+	Params.SourceAbilitySystemComponent = GetAbilitySystemComponentFromActorInfo();
+	Params.TargetAbilitySystemComponent = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+
+	return Params;
 }
 
 FTaggedMontage UAuraDamageGameplayAbility::GetRandomAttackMontage(const TArray<FTaggedMontage> TaggedMontages) const
@@ -27,12 +44,4 @@ FTaggedMontage UAuraDamageGameplayAbility::GetRandomAttackMontage(const TArray<F
 		return TaggedMontages[Selection];
 	}
 	return FTaggedMontage();
-}
-
-float UAuraDamageGameplayAbility::GetDamageByDamageType(float InLevel, const FGameplayTag& DamageType) const
-{
-	checkf(DamageTypes.Contains(DamageType), TEXT("Gameplay Ability [%s] does not contain DamageType [%s]"),
-	       *GetNameSafe(this), *DamageType.ToString());
-
-	return DamageTypes[DamageType].GetValueAtLevel(InLevel);
 }
