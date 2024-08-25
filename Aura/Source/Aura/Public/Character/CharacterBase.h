@@ -9,6 +9,7 @@
 #include "AbilitySystem/Data/CharacterCategoryInfo.h"
 #include "CharacterBase.generated.h"
 
+class UDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
@@ -37,6 +38,11 @@ public:
 	virtual int32 GetNumMinionsCount_Implementation() override;
 	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 	virtual ECharacterCatrgory GetCharacterCategory_Implementation() override;
+
+	virtual FOnASCRegisteredSignature GetOnAscRegisteredDelegate() override;
+	FOnASCRegisteredSignature OnAscRegisteredDelegate;
+	virtual FOnDeathSignuture GetOnDeathDelegate() override;
+	FOnDeathSignuture OnDeathDelegate;
 	/* End CombatInterface */
 
 	UFUNCTION(NetMulticast, Reliable)
@@ -101,7 +107,8 @@ protected:
 
 	virtual void AddCharacterAbilities();
 
-	/* Dissolve Effects*/
+	/* Effects */
+	//Dissolve
 	void Dissolve();
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -114,7 +121,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
-
+	//Debuff
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UDebuffNiagaraComponent> DebuffComponent;
 private:
 	UPROPERTY(EditDefaultsOnly, Category= "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;

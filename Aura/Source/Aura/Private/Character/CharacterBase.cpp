@@ -4,6 +4,7 @@
 #include "AbilitySystemComponent.h"
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -11,6 +12,10 @@
 ACharacterBase::ACharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
+
+	DebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>(TEXT("DebuffComponent"));
+	DebuffComponent->SetupAttachment(GetRootComponent());
+	DebuffComponent->SetDebuffTag(FAuraGameplayTags::Get().Debuff_Burn);
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
@@ -81,6 +86,16 @@ ECharacterCatrgory ACharacterBase::GetCharacterCategory_Implementation()
 	return CharacterCategory;
 }
 
+FOnASCRegisteredSignature ACharacterBase::GetOnAscRegisteredDelegate()
+{
+	return OnAscRegisteredDelegate;
+}
+
+FOnDeathSignuture ACharacterBase::GetOnDeathDelegate()
+{
+	return OnDeathDelegate;
+}
+
 UAnimMontage* ACharacterBase::GetHitReactMontage_Implementation()
 {
 	return HitReactMontage;
@@ -109,6 +124,8 @@ void ACharacterBase::MulticastHandleDeath_Implementation()
 	Dissolve();
 
 	bDead = true;
+	if (DebuffComponent) { DebuffComponent->Deactivate(); }
+	OnDeathDelegate.Broadcast(this);
 }
 
 void ACharacterBase::BeginPlay()

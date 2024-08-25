@@ -145,6 +145,7 @@ void AAuraEnemy::InitAbilityActorinfo()
 	{
 		InitDefaultAttributeByGE();
 	}
+	OnAscRegisteredDelegate.Broadcast(AbilitySystemComponent);
 }
 
 void AAuraEnemy::InitDefaultAttributeByGE() const
