@@ -3,6 +3,63 @@
 
 #include "AbilitySystem/Abilities/AuraFireBolt.h"
 
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Actor/AuraProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Interaction/CombatInterface.h"
+
+void UAuraFireBolt::SpawnProjectiles(const FVector& TargetLocation, const FGameplayTag& SocketTag, bool bOverridePitch, float PitchOverrideNum,
+                                     AActor* HomingTarget)
+{
+	const bool bInServer = GetAvatarActorFromActorInfo()->HasAuthority();
+	if (!bInServer) { return; }
+
+	FTransform Transform;
+	FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), SocketTag);
+	Transform.SetLocation(SocketLocation);
+	FRotator Rotation = (TargetLocation - SocketLocation).Rotation();
+	if (bOverridePitch) { Rotation.Pitch = PitchOverrideNum; }
+	Transform.SetRotation(Rotation.Quaternion());
+
+	const FVector Forward = Rotation.Vector();
+	const int32 EffectiveNumProjectiles = FMath::Min(NumProjectiles, GetAbilityLevel());
+	TArray<FRotator> Rotators =
+		UAuraAbilitySystemLibrary::EvenlySpacedRotators(Forward, FVector::UpVector, ProjectileSpread, EffectiveNumProjectiles);
+
+	for (const FRotator& Rot : Rotators)
+	{
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(SocketLocation);
+		SpawnTransform.SetRotation(Rot.Quaternion());
+
+		AAuraProjectile* SpawnProjectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
+			ProjectileClass,
+			SpawnTransform,
+			GetOwningActorFromActorInfo(),
+			Cast<APawn>(GetOwningActorFromActorInfo()),
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+		SpawnProjectile->DamageEffectParams = MakeAuraDamageEffectParams();
+
+		if (HomingTarget && HomingTarget->Implements<UCombatInterface>())
+		{
+			SpawnProjectile->GetProjectileMovementComponent()->HomingTargetComponent = HomingTarget->GetRootComponent();
+		}
+		else
+		{
+			SpawnProjectile->HomingTargetComp = NewObject<USceneComponent>(USceneComponent::StaticClass());
+			SpawnProjectile->HomingTargetComp->SetWorldLocation(TargetLocation);
+			SpawnProjectile->GetProjectileMovementComponent()->HomingTargetComponent = SpawnProjectile->HomingTargetComp;
+		}
+		SpawnProjectile->SetLifeSpan(5.f);
+		SpawnProjectile->GetProjectileMovementComponent()->HomingAccelerationMagnitude = FMath::RandRange(
+			HomingAccelerationMin, HomingAccelerationMax);
+		SpawnProjectile->GetProjectileMovementComponent()->bIsHomingProjectile = bLaunchHomingProjectile;
+
+		SpawnProjectile->FinishSpawning(SpawnTransform);
+	}
+}
+
 FString UAuraFireBolt::GetSpellDescription(int32 Level)
 {
 	bCallGetNextLevelinfo = false;

@@ -47,6 +47,7 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 		FString Description;
 		FString NextLevelDescription;
 		ShouldEnableButtons(SelectedAbility.StatusTag, CurrentSpellPoints, bCanSpendPoints, bCanEquipped);
+		GetAuraASC()->GetDescriptionByAbilityTag(SelectedAbility.AbilityTag,Description,NextLevelDescription);
 		SpellGlobeSelectedDelegate.Broadcast(bCanSpendPoints, bCanEquipped, Description, NextLevelDescription);
 	});
 

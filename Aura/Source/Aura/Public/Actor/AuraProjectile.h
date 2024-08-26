@@ -24,6 +24,11 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta=(AllowPrivateAccess, ExposeOnSpawn= true))
 	FAuraDamageEffectParams DamageEffectParams;
 
+	UPROPERTY()
+	TObjectPtr<USceneComponent> HomingTargetComp;
+	
+	UProjectileMovementComponent* GetProjectileMovementComponent() {return ProjectileMovementComponent;}
+	
 protected:
 	virtual void BeginPlay() override;
 	void OnHit();

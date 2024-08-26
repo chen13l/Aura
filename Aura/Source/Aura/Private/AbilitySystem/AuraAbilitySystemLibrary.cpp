@@ -351,3 +351,43 @@ bool UAuraAbilitySystemLibrary::IsNotFriendly(AActor* FirstActor, AActor* Second
 	const bool bFriendly = bBothPlayer || bBothEnemy;
 	return !bFriendly;
 }
+
+TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& Forward, const FVector& Axis, float Spread, int32 NumRotators)
+{
+	TArray<FRotator> Rotators;
+
+	if (NumRotators > 1)
+	{
+		const FVector SpreadOfLeft = Forward.RotateAngleAxis(-Spread / 2.f, Axis);
+		for (int i = 0; i < NumRotators; ++i)
+		{
+			float DeltaSpread = Spread / (NumRotators - 1);
+			Rotators.Add(SpreadOfLeft.RotateAngleAxis(DeltaSpread * i, FVector::UpVector).Rotation());
+		}
+	}
+	else
+	{
+		Rotators.Add(Forward.Rotation());
+	}
+	return Rotators;
+}
+
+TArray<FVector> UAuraAbilitySystemLibrary::EvenlyRotatedVectors(const FVector& Forward, const FVector& Axis, float Spread, int32 NumVectors)
+{
+	TArray<FVector> Vectors;
+
+	if (NumVectors > 1)
+	{
+		const FVector SpreadOfLeft = Forward.RotateAngleAxis(-Spread / 2.f, Axis);
+		for (int i = 0; i < NumVectors; ++i)
+		{
+			float DeltaSpread = Spread / (NumVectors - 1);
+			Vectors.Add(SpreadOfLeft.RotateAngleAxis(DeltaSpread, FVector::UpVector));
+		}
+	}
+	else
+	{
+		Vectors.Add(Forward);
+	}
+	return Vectors;
+}
