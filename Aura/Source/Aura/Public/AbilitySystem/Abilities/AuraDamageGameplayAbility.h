@@ -20,7 +20,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* Actor);
 
-	FAuraDamageEffectParams MakeAuraDamageEffectParams(AActor* TargetActor = nullptr);
+	UFUNCTION(BlueprintPure)
+	FAuraDamageEffectParams MakeAuraDamageEffectParams(AActor* TargetActor = nullptr) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
@@ -37,7 +38,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	float DebuffDuration = 5.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
-	float DeathImpulseMagnitude = 60.f;
+	float DeathImpulseMagnitude = 1000.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
+	float KnockbackChance = 0.f; 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
+	float KnockbackMagnitude = 1000.f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;

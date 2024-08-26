@@ -64,10 +64,13 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 		if (!DeathImpulseVector.IsZero())
 		{
 			RepBits |= 1 << 14;
+		}if (!KnockbackForce.IsZero())
+		{
+			RepBits |= 1 << 14;
 		}
 	}
 
-	Ar.SerializeBits(&RepBits, 15);
+	Ar.SerializeBits(&RepBits, 16);
 
 	if (RepBits & (1 << 0))
 	{
@@ -148,6 +151,10 @@ bool FAuraGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bo
 	if (RepBits & (1 << 14))
 	{
 		DeathImpulseVector.NetSerialize(Ar, Map, bOutSuccess);
+	}
+	if (RepBits & (1 << 15))
+	{
+		KnockbackForce.NetSerialize(Ar, Map, bOutSuccess);
 	}
 
 	if (Ar.IsLoading())

@@ -215,6 +215,15 @@ FVector UAuraAbilitySystemLibrary::GetDeathImpulseVector(const FGameplayEffectCo
 	return FVector::ZeroVector;
 }
 
+FVector UAuraAbilitySystemLibrary::GetKnockbackForce(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<const FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return AuraGameplayEffectContext->GetKnockbackForce();
+	}
+	return FVector::ZeroVector;
+}
+
 void UAuraAbilitySystemLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsblockedHit)
 {
 	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
@@ -279,6 +288,14 @@ void UAuraAbilitySystemLibrary::SetDeathImpulseVector(FGameplayEffectContextHand
 	}
 }
 
+void UAuraAbilitySystemLibrary::SetKnockbackForce(FGameplayEffectContextHandle& EffectContextHandle, FVector InKnockbackForce)
+{
+	if (FAuraGameplayEffectContext* AuraGameplayEffectContext = static_cast<FAuraGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		AuraGameplayEffectContext->SetKnockbackForce(InKnockbackForce);
+	}
+}
+
 //ApplyRadialDamageWithFalloff(...) has similar useful implementation
 void UAuraAbilitySystemLibrary::GetLivePlayerWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
                                                           const TArray<AActor*>& IgnoreActors, float Radius, const FVector& SphereOrigin)
@@ -312,6 +329,7 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	FGameplayEffectContextHandle EffectContext = Params.SourceAbilitySystemComponent->MakeEffectContext();
 	EffectContext.AddSourceObject(SourceActor);
 	SetDeathImpulseVector(EffectContext, Params.DeathImpulseVector);
+	SetKnockbackForce(EffectContext, Params.KnockbackForece);
 	FGameplayEffectSpecHandle SpecHandle = Params.SourceAbilitySystemComponent->MakeOutgoingSpec(
 		Params.DamageEffectClass, Params.AbilityLevel, EffectContext);
 

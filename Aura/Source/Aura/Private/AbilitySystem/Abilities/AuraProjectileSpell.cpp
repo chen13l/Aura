@@ -33,7 +33,6 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& TargetLocation, const 
 	AAuraProjectile* SpawnProjectile = GetWorld()->SpawnActorDeferred<AAuraProjectile>(
 		ProjectileClass, SpawnTransform, GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-
 	SpawnProjectile->DamageEffectParams = MakeAuraDamageEffectParams();
 
 	SpawnProjectile->FinishSpawning(SpawnTransform);
