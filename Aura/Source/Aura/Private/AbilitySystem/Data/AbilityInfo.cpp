@@ -12,7 +12,7 @@ FAuraAbilityInfo UAbilityInfo::FindAbilityInfoByTag(const FGameplayTag& Tag, boo
 		if (Info.AbilityTag.MatchesTagExact(Tag)) { return Info; }
 	}
 
-	if (bLogNotFind) { UE_LOG(LogAura, Error, TEXT("Can't find info [%s] in AbilityInfo [%s]"), *Tag.ToString(), *GetNameSafe(this)); }
+	if (bLogNotFind) { UE_LOG(Log_Aura, Error, TEXT("Can't find info [%s] in AbilityInfo [%s]"), *Tag.ToString(), *GetNameSafe(this)); }
 
 	return FAuraAbilityInfo();
 }
