@@ -99,7 +99,7 @@ void UAuraAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate
 	{
 		if (!Delegate.ExecuteIfBound(Spec))
 		{
-			UE_LOG(Log_Aura, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__);
+			UE_LOG(LogAura, Error, TEXT("Failed to execute delegate in %hs"), __FUNCTION__);
 		}
 	}
 }
