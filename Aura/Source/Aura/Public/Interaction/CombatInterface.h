@@ -89,6 +89,9 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	ECharacterCatrgory GetCharacterCategory();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	USkeletalMeshComponent* GetWeapon();
+
 	virtual FOnASCRegisteredSignature GetOnAscRegisteredDelegate() = 0;
 	virtual FOnDeathSignuture GetOnDeathDelegate() = 0;
 };

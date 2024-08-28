@@ -86,6 +86,11 @@ ECharacterCatrgory ACharacterBase::GetCharacterCategory_Implementation()
 	return CharacterCategory;
 }
 
+USkeletalMeshComponent* ACharacterBase::GetWeapon_Implementation()
+{
+	return Weapon;
+}
+
 FOnASCRegisteredSignature ACharacterBase::GetOnAscRegisteredDelegate()
 {
 	return OnAscRegisteredDelegate;

@@ -17,12 +17,18 @@ class AURA_API UAuraBeamSpell : public UAuraDamageGameplayAbility
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetTargetDataInfo(const FHitResult& HitResult);
-	
+
 	UFUNCTION(BlueprintCallable)
 	void SetOwnerParams();
-protected:
 
-	UPROPERTY(BlueprintReadWrite,Category="Beam")
+	UFUNCTION(BlueprintCallable)
+	void TraceFirstTarget(const FVector& BeamTargetLocation);
+
+	UFUNCTION(BlueprintCallable)
+	void StoreAdditionalTarget(TArray<AActor*>& OutAdditionalTargets);
+
+protected:
+	UPROPERTY(BlueprintReadWrite, Category="Beam")
 	FVector MouseHitLocation;
 
 	UPROPERTY(BlueprintReadWrite, Category="Beam")
@@ -33,5 +39,14 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category="Beam")
 	TObjectPtr<ACharacter> OwnerCharacter;
+
 private:
+	UPROPERTY(EditDefaultsOnly, Category="Beam")
+	int32 MaxTargets = 5;
+
+	UPROPERTY(EditDefaultsOnly, Category="Beam")
+	FScalableFloat TargetRadius = 600.f;
+
+	UPROPERTY(EditDefaultsOnly, Category="Beam")
+	int32 MaxNumShockTargets = 5.f;
 };

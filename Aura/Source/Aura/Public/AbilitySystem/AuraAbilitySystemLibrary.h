@@ -119,4 +119,12 @@ public:
 	
 	UFUNCTION(BlueprintPure, Category="AuraAbilitySystemLibrary|GameplayMechanics")
 	static TArray<FVector> EvenlyRotatedVectors(const FVector& Forward,const FVector& Axis,float Spread,int32 NumVectors);
+
+	UFUNCTION(BlueprintPure, Category="AuraAbilitySystemLibrary|GameplayMechanics")
+	static void GetClosetTargets(int32 MaxTargets,const TArray<AActor*>& Actors, TArray<AActor*>& OutClosetTargets, const FVector& Origin);
+
+	/* Tool Func */
+	//heap 
+	static void MakeHeapGetSmallNDistanceInActors(const TArray<AActor*>& InActors, const FVector& Origin, TArray<AActor*>& OutActors, int32 OutNum);
+	static void HeapifyBigRootActor(TArray<AActor*>& InActors,const FVector& Origin, int32 Len, int32 Index);
 };

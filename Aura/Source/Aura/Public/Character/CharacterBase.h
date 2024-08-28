@@ -38,6 +38,7 @@ public:
 	virtual int32 GetNumMinionsCount_Implementation() override;
 	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 	virtual ECharacterCatrgory GetCharacterCategory_Implementation() override;
+	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 
 	virtual FOnASCRegisteredSignature GetOnAscRegisteredDelegate() override;
 	FOnASCRegisteredSignature OnAscRegisteredDelegate;

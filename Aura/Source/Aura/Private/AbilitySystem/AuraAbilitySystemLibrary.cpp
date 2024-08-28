@@ -391,3 +391,78 @@ TArray<FVector> UAuraAbilitySystemLibrary::EvenlyRotatedVectors(const FVector& F
 	}
 	return Vectors;
 }
+
+void UAuraAbilitySystemLibrary::GetClosetTargets(int32 MaxTargets, const TArray<AActor*>& Actors, TArray<AActor*>& OutClosetTargets,
+                                                 const FVector& Origin)
+{
+	MakeHeapGetSmallNDistanceInActors(Actors, Origin, OutClosetTargets, MaxTargets);
+}
+
+void UAuraAbilitySystemLibrary::MakeHeapGetSmallNDistanceInActors(const TArray<AActor*>& InActors, const FVector& Origin, TArray<AActor*>& OutActors,
+                                                                  int32 OutNum)
+{
+	if (InActors.Num() <= OutNum)
+	{
+		OutActors = InActors;
+		return;
+	}
+
+	TArray<AActor*> TemActors;
+	for (int32 i = 0; i < OutNum; ++i)
+	{
+		TemActors.AddUnique(InActors[i]);
+	}
+	// construct big root heap
+	for (int32 i = ((OutNum - 1) - 1) / 2; i >= 0; --i)
+	{
+		HeapifyBigRootActor(TemActors, Origin, OutNum, i);
+	}
+	// replace root
+	for (int32 i = OutNum; i < InActors.Num(); ++i)
+	{
+		const float TemLongest = (TemActors[0]->GetActorLocation() - Origin).Length();
+		const float NextDistance = (InActors[i]->GetActorLocation() - Origin).Length();
+		if (TemLongest > NextDistance)
+		{
+			TemActors[0] = InActors[i];
+			HeapifyBigRootActor(TemActors, Origin, TemActors.Num(), 0);
+		}
+	}
+	OutActors = TemActors;
+}
+
+void UAuraAbilitySystemLibrary::HeapifyBigRootActor(TArray<AActor*>& InActors, const FVector& Origin, int32 Len, int32 Index)
+{
+	int32 Largest = Index;
+	int32 LSon = Index * 2 + 1;
+	int32 RSon = Index * 2 + 2;
+
+	float BiggestDistance = 0.f;
+
+	if (Index < Len)
+	{
+		BiggestDistance = (InActors[Index]->GetActorLocation() - Origin).Length();
+	}
+	if (LSon < Len)
+	{
+		float LSonDistance = (InActors[LSon]->GetActorLocation() - Origin).Length();
+		if (LSonDistance > BiggestDistance)
+		{
+			Largest = LSon;
+			BiggestDistance = LSonDistance;
+		}
+	}
+	if (RSon < Len)
+	{
+		const float RSonDistance = (InActors[RSon]->GetActorLocation() - Origin).Length();
+		if (RSonDistance > BiggestDistance)
+		{
+			Largest = RSon;
+		}
+	}
+	if (Largest != Index)
+	{
+		Swap(InActors[Index], InActors[Largest]);
+		HeapifyBigRootActor(InActors, Origin, Len, Largest);
+	}
+}
