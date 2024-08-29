@@ -23,6 +23,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	FAuraDamageEffectParams MakeAuraDamageEffectParams(AActor* TargetActor = nullptr) const;
 
+	UFUNCTION(BlueprintPure)
+	float GetDamageAtLevel() const;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	FGameplayTag DamageTypeTag;
@@ -40,7 +43,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	float DeathImpulseMagnitude = 1000.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
-	float KnockbackChance = 0.f; 
+	float KnockbackChance = 0.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	float KnockbackMagnitude = 1000.f;
 

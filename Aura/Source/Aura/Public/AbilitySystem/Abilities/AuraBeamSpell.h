@@ -27,6 +27,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StoreAdditionalTarget(TArray<AActor*>& OutAdditionalTargets);
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void PrimaryTargetDie(AActor* TargetActor);
+	UFUNCTION(BlueprintImplementableEvent)
+	void AdditionalTargetDie(AActor* TargetActor);
 protected:
 	UPROPERTY(BlueprintReadWrite, Category="Beam")
 	FVector MouseHitLocation;
@@ -41,8 +45,6 @@ protected:
 	TObjectPtr<ACharacter> OwnerCharacter;
 
 private:
-	UPROPERTY(EditDefaultsOnly, Category="Beam")
-	int32 MaxTargets = 5;
 
 	UPROPERTY(EditDefaultsOnly, Category="Beam")
 	FScalableFloat TargetRadius = 600.f;
