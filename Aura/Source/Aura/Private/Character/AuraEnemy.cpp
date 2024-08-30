@@ -33,6 +33,7 @@ AAuraEnemy::AAuraEnemy()
 	HealthBar->SetupAttachment(GetRootComponent());
 
 	Tags.Add(FName("Enemy"));
+	BaseWalkSpeed = 250.f;
 }
 
 void AAuraEnemy::HighLight()
@@ -135,10 +136,20 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 	}
 }
 
+void AAuraEnemy::OnStuntagChanged(const FGameplayTag StunTag, int32 NewCount)
+{
+	Super::OnStuntagChanged(StunTag, NewCount);
+	if (AuraAIController && AuraAIController->GetBlackboardComponent())
+	{
+		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("Stunned"), bInStun);
+	}
+}
+
 void AAuraEnemy::InitAbilityActorinfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
-
+	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(
+		this, &AAuraEnemy::OnStuntagChanged);
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 
 	if (HasAuthority())

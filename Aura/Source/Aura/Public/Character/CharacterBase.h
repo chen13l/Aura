@@ -42,7 +42,7 @@ public:
 
 	virtual FOnASCRegisteredSignature GetOnAscRegisteredDelegate() override;
 	FOnASCRegisteredSignature OnAscRegisteredDelegate;
-	virtual FOnDeathSignuture GetOnDeathDelegate() override;
+	virtual FOnDeathSignuture& GetOnDeathDelegate() override;
 	FOnDeathSignuture OnDeathDelegate;
 	/* End CombatInterface */
 
@@ -52,12 +52,16 @@ public:
 	UPROPERTY(EditAnywhere, Category="Combat")
 	TArray<FTaggedMontage> AttackMontages;
 
+	/* Debuff */
+	bool IsInStun() const { return bInStun; }
+
 protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Character Class Defaults")
 	ECharacterCatrgory CharacterCategory = ECharacterCatrgory::Warrior;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	/* combat */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -72,7 +76,6 @@ protected:
 	FName TailSockName;
 
 	bool bDead = false;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	UNiagaraSystem* BloodEffect;
 
@@ -81,6 +84,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Combat")
 	int32 NumMinions = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
+	float BaseWalkSpeed = 600.f;
 
 	/* gas */
 	UPROPERTY()
@@ -125,10 +131,24 @@ protected:
 	//Debuff
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UDebuffNiagaraComponent> DebuffComponent;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UDebuffNiagaraComponent> StunDebuffComponent;
+
+	UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
+	bool bInStun = false;
+	UFUNCTION()
+	virtual void OnRep_Stunned();
+	UPROPERTY(ReplicatedUsing=OnRep_Burned, BlueprintReadOnly)
+	bool bInBurn = false;
+	UFUNCTION()
+	virtual void OnRep_Burned();
+
+	virtual void OnStuntagChanged(const FGameplayTag StunTag, int32 NewCount);
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category= "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupAbilities;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category= "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
 

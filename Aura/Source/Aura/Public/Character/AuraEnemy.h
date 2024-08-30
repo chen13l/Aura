@@ -40,13 +40,8 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeDataChangedSignature OnMaxHealthChanged;
 
-	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
-
 	UPROPERTY(BlueprintReadOnly, Category="Combat")
 	bool bHitReacting = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
-	float BaseWalkSpeed = 250.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Combat")
 	float LifeSpan = 5.f;
@@ -61,6 +56,10 @@ protected:
 	virtual void InitAbilityActorinfo() override;
 	virtual void InitDefaultAttributeByGE() const override;
 
+	/* Debuff */
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	virtual void OnStuntagChanged(const FGameplayTag StunTag, int32 NewCount) override;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UWidgetComponent> HealthBar;
 

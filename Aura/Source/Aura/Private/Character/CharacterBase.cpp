@@ -7,7 +7,9 @@
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
 
 ACharacterBase::ACharacterBase()
 {
@@ -16,6 +18,9 @@ ACharacterBase::ACharacterBase()
 	DebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>(TEXT("DebuffComponent"));
 	DebuffComponent->SetupAttachment(GetRootComponent());
 	DebuffComponent->SetDebuffTag(FAuraGameplayTags::Get().Debuff_Burn);
+	StunDebuffComponent = CreateDefaultSubobject<UDebuffNiagaraComponent>(TEXT("StunDebuffComponent"));
+	StunDebuffComponent->SetupAttachment(GetRootComponent());
+	StunDebuffComponent->SetDebuffTag(FAuraGameplayTags::Get().Debuff_Stun);
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
@@ -96,7 +101,7 @@ FOnASCRegisteredSignature ACharacterBase::GetOnAscRegisteredDelegate()
 	return OnAscRegisteredDelegate;
 }
 
-FOnDeathSignuture ACharacterBase::GetOnDeathDelegate()
+FOnDeathSignuture& ACharacterBase::GetOnDeathDelegate()
 {
 	return OnDeathDelegate;
 }
@@ -132,12 +137,21 @@ void ACharacterBase::MulticastHandleDeath_Implementation(const FVector& DeathImp
 
 	bDead = true;
 	if (DebuffComponent) { DebuffComponent->Deactivate(); }
+	if (StunDebuffComponent) { StunDebuffComponent->Deactivate(); }
 	OnDeathDelegate.Broadcast(this);
 }
 
 void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void ACharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ACharacterBase, bInStun);
+	DOREPLIFETIME(ACharacterBase, bInBurn);
 }
 
 bool ACharacterBase::IsDead_Implementation() const
@@ -195,6 +209,20 @@ void ACharacterBase::Dissolve()
 		Weapon->SetMaterial(0, DynamicMI);
 		StartWeaponDissolveTimeLine(DynamicMI);
 	}
+}
+
+void ACharacterBase::OnRep_Stunned()
+{
+}
+
+void ACharacterBase::OnRep_Burned()
+{
+}
+
+void ACharacterBase::OnStuntagChanged(const FGameplayTag StunTag, int32 NewCount)
+{
+	bInStun = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bInStun ? 0.f : BaseWalkSpeed;
 }
 
 UAbilitySystemComponent* ACharacterBase::GetAbilitySystemComponent() const

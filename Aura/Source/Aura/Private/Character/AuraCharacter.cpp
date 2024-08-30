@@ -3,11 +3,13 @@
 
 #include "Character/AuraCharacter.h"
 
+#include "AuraGameplayTags.h"
 #include "NiagaraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Player/AuraPlayerState.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/LevelupInfo.h"
+#include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Player/AuraPlayerController.h"
@@ -123,7 +125,7 @@ void AAuraCharacter::AddToPlayerLevel_Implementation(int32 InLevel)
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
 	AuraPlayerState->AddToLevel(InLevel);
-	if(UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(GetAbilitySystemComponent()))
+	if (UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(GetAbilitySystemComponent()))
 	{
 		AuraASC->UpdateAbilityStatus(AuraPlayerState->GetPlayerLevel());
 	}
@@ -157,16 +159,52 @@ int32 AAuraCharacter::GetSpellPoints_Implementation() const
 	return AuraPlayerState->GetSpellPoints();
 }
 
+void AAuraCharacter::OnRep_Stunned()
+{
+	if(UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent))
+	{
+		FGameplayTagContainer BlockTags;
+		const FAuraGameplayTags& GameplayTags = FAuraGameplayTags::Get();
+		BlockTags.AddTag(GameplayTags.Player_Block_CursorTrace);
+		BlockTags.AddTag(GameplayTags.Player_Block_InputHeld);
+		BlockTags.AddTag(GameplayTags.Player_Block_InputPressed);
+		BlockTags.AddTag(GameplayTags.Player_Block_InputReleased);
+		if(bInStun)
+		{
+			AuraASC->AddLooseGameplayTags(BlockTags);
+			StunDebuffComponent->Activate();
+		}else
+		{
+			AuraASC->RemoveLooseGameplayTags(BlockTags);
+			StunDebuffComponent->Deactivate();
+		}
+	}
+}
+
+void AAuraCharacter::OnRep_Burned()
+{
+	if(bInBurn)
+	{
+		DebuffComponent->Activate();
+	}
+	else
+	{
+		DebuffComponent->Deactivate();
+	}
+}
+
 void AAuraCharacter::InitAbilityActorinfo()
 {
 	AAuraPlayerState* AuraPlayerState = GetPlayerState<AAuraPlayerState>();
 	check(AuraPlayerState);
 	AuraPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(AuraPlayerState, this);
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
+	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved).AddUObject(
+		this, &AAuraCharacter::OnStuntagChanged);
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 
 	OnAscRegisteredDelegate.Broadcast(AbilitySystemComponent);
-	
+
 	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	if (AAuraPlayerController* AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{

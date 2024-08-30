@@ -38,6 +38,7 @@ void AAuraProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	SetLifeSpan(LifeSpan);
+	SetReplicateMovement(true);
 
 	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AAuraProjectile::OnSphereOverlap);
 	LoopingSoundComp = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
@@ -70,6 +71,7 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActo
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                                       const FHitResult& HitResult)
 {
+	if (DamageEffectParams.SourceAbilitySystemComponent == nullptr) { return; }
 	AActor* SourceAvatarActor = DamageEffectParams.SourceAbilitySystemComponent->GetAvatarActor();
 	if (SourceAvatarActor == OtherActor) { return; }
 	if (!UAuraAbilitySystemLibrary::IsNotFriendly(SourceAvatarActor, OtherActor)) { return; }
@@ -80,8 +82,8 @@ void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActo
 		{
 			const FVector DeathImpulse = OtherActor->GetActorForwardVector() * DamageEffectParams.DeathImpulseMagnitude;
 			DamageEffectParams.DeathImpulseVector = DeathImpulse;
-			const bool bKnockback = FMath::RandRange(1,100)<DamageEffectParams.KnockbackChance;
-			if(bKnockback)
+			const bool bKnockback = FMath::RandRange(1, 100) < DamageEffectParams.KnockbackChance;
+			if (bKnockback)
 			{
 				FRotator ActorRotation = GetActorRotation();
 				ActorRotation.Pitch = 45.f;
