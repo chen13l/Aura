@@ -146,6 +146,14 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	AuraGameplayTags.Abilities_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.HitReact", "HitReact Ability");
 
+	// Passive
+	AuraGameplayTags.Abilities_Passive_HaloOfProtection = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Passive.HaloOfProtection", "Halo Of Protection");
+	AuraGameplayTags.Abilities_Passive_LifeSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Passive.LifeSiphon", "Life Siphon");
+	AuraGameplayTags.Abilities_Passive_ManaSiphon = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Passive.ManaSiphon", "Mana Siphon");
+	
 	//Fire
 	AuraGameplayTags.Abilities_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Fire.FireBolt", "FireBolt Ability Tag");

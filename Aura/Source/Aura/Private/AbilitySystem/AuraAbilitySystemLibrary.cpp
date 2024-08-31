@@ -6,7 +6,6 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AuraAbilityTypes.h"
 #include "AuraGameplayTags.h"
-#include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Game/AuraGameModeBase.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/GameplayStatics.h"
@@ -412,20 +411,23 @@ void UAuraAbilitySystemLibrary::MakeHeapGetSmallNDistanceInActors(const TArray<A
 	{
 		TemActors.AddUnique(InActors[i]);
 	}
-	// construct big root heap
-	for (int32 i = ((OutNum - 1) - 1) / 2; i >= 0; --i)
+	if(TemActors.Num() > 0)
 	{
-		HeapifyBigRootActor(TemActors, Origin, OutNum, i);
-	}
-	// replace root
-	for (int32 i = OutNum; i < InActors.Num(); ++i)
-	{
-		const float TemLongest = (TemActors[0]->GetActorLocation() - Origin).Length();
-		const float NextDistance = (InActors[i]->GetActorLocation() - Origin).Length();
-		if (TemLongest > NextDistance)
+		// construct big root heap
+		for (int32 i = ((OutNum - 1) - 1) / 2; i >= 0; --i)
 		{
-			TemActors[0] = InActors[i];
-			HeapifyBigRootActor(TemActors, Origin, TemActors.Num(), 0);
+			HeapifyBigRootActor(TemActors, Origin, OutNum, i);
+		}
+		// replace root
+		for (int32 i = OutNum; i < InActors.Num(); ++i)
+		{
+			const float TemLongest = (TemActors[0]->GetActorLocation() - Origin).Length();
+			const float NextDistance = (InActors[i]->GetActorLocation() - Origin).Length();
+			if (TemLongest > NextDistance)
+			{
+				TemActors[0] = InActors[i];
+				HeapifyBigRootActor(TemActors, Origin, TemActors.Num(), 0);
+			}
 		}
 	}
 	OutActors = TemActors;

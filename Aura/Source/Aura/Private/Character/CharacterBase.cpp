@@ -96,6 +96,16 @@ USkeletalMeshComponent* ACharacterBase::GetWeapon_Implementation()
 	return Weapon;
 }
 
+void ACharacterBase::SetIsBeingShocked_Implementation(bool InState)
+{
+	bIsBeingShocked = InState;
+}
+
+bool ACharacterBase::IsBeingShocked_Implementation()
+{
+	return bIsBeingShocked;
+}
+
 FOnASCRegisteredSignature ACharacterBase::GetOnAscRegisteredDelegate()
 {
 	return OnAscRegisteredDelegate;
@@ -152,6 +162,7 @@ void ACharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLi
 
 	DOREPLIFETIME(ACharacterBase, bInStun);
 	DOREPLIFETIME(ACharacterBase, bInBurn);
+	DOREPLIFETIME(ACharacterBase, bIsBeingShocked);
 }
 
 bool ACharacterBase::IsDead_Implementation() const

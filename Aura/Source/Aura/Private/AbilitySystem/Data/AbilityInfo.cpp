@@ -5,14 +5,14 @@
 
 #include "Aura/AuraLogChannels.h"
 
-FAuraAbilityInfo UAbilityInfo::FindAbilityInfoByTag(const FGameplayTag& Tag, bool bLogNotFind)
+FAuraAbilityInfo UAbilityInfo::FindAbilityInfoByTag(const FGameplayTag& AbilityTag, bool bLogNotFind)
 {
 	for (FAuraAbilityInfo Info : AbilityInfos)
 	{
-		if (Info.AbilityTag.MatchesTagExact(Tag)) { return Info; }
+		if (Info.AbilityTag.MatchesTagExact(AbilityTag)) { return Info; }
 	}
 
-	if (bLogNotFind) { UE_LOG(LogAura, Error, TEXT("Can't find info [%s] in AbilityInfo [%s]"), *Tag.ToString(), *GetNameSafe(this)); }
+	if (bLogNotFind) { UE_LOG(Log_Aura, Error, TEXT("Can't find info [%s] in AbilityInfo [%s]"), *AbilityTag.ToString(), *GetNameSafe(this)); }
 
 	return FAuraAbilityInfo();
 }

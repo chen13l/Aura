@@ -40,6 +40,10 @@ public:
 	virtual ECharacterCatrgory GetCharacterCategory_Implementation() override;
 	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 
+	//state
+	virtual void SetIsBeingShocked_Implementation(bool InState) override;
+	virtual bool IsBeingShocked_Implementation() override;
+	
 	virtual FOnASCRegisteredSignature GetOnAscRegisteredDelegate() override;
 	FOnASCRegisteredSignature OnAscRegisteredDelegate;
 	virtual FOnDeathSignuture& GetOnDeathDelegate() override;
@@ -134,6 +138,7 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UDebuffNiagaraComponent> StunDebuffComponent;
 
+	/*debuff*/
 	UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
 	bool bInStun = false;
 	UFUNCTION()
@@ -142,7 +147,10 @@ protected:
 	bool bInBurn = false;
 	UFUNCTION()
 	virtual void OnRep_Burned();
-
+	//state
+	UPROPERTY(Replicated,BlueprintReadOnly)
+	bool bIsBeingShocked = false;
+	
 	virtual void OnStuntagChanged(const FGameplayTag StunTag, int32 NewCount);
 
 private:

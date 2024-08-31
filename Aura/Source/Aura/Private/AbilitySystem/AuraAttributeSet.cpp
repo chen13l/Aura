@@ -134,10 +134,16 @@ void UAuraAttributeSet::HandleIncomingXP(const FEffectProperties& Props)
 		const int32 NumLevelUps = NewLevel - CurrentLevel;
 		if (NumLevelUps > 0)
 		{
-			const int32 AttributePointsReward = IPlayerInterface::Execute_GetAttributePointsReward(Props.SourceCharacter, CurrentLevel);
-			const int32 SpellPointsReward = IPlayerInterface::Execute_GetSpellPointsReward(Props.SourceCharacter, CurrentLevel);
-
 			IPlayerInterface::Execute_AddToPlayerLevel(Props.SourceCharacter, NumLevelUps);
+
+			int32 AttributePointsReward = 0;
+			int32 SpellPointsReward = 0;
+			for (int i = 0; i < NumLevelUps; ++i)
+			{
+				AttributePointsReward += IPlayerInterface::Execute_GetAttributePointsReward(Props.SourceCharacter, CurrentLevel + i);
+				SpellPointsReward += IPlayerInterface::Execute_GetSpellPointsReward(Props.SourceCharacter, CurrentLevel + i);
+			}
+
 			IPlayerInterface::Execute_AddToAttributePoints(Props.SourceCharacter, AttributePointsReward);
 			IPlayerInterface::Execute_AddToSpellPoints(Props.SourceCharacter, SpellPointsReward);
 
@@ -168,6 +174,7 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& Props)
 	DebuffEffect->Period = DamageFrequency;
 	DebuffEffect->bExecutePeriodicEffectOnApplication = false;
 	DebuffEffect->DurationMagnitude = FScalableFloat(DamageDuration);
+
 	/*
 	 * after UE5.3, GameplayEffect changed, need to use following code instead:
 			FInheritedTagContainer InheritedTags;
@@ -175,7 +182,17 @@ void UAuraAttributeSet::HandleDebuff(const FEffectProperties& Props)
 			UTargetTagsGameplayEffectComponent& Component = Effect->AddComponent<UTargetTagsGameplayEffectComponent>();
 			Component.SetAndApplyTargetTagChanges(InheritedTags);
 	 */
-	DebuffEffect->InheritableOwnedTagsContainer.AddTag(Tags.DamageTypesToDebuff[DamageType]);
+
+	const FGameplayTag DebuffTag = Tags.DamageTypesToDebuff[DamageType];
+	DebuffEffect->InheritableOwnedTagsContainer.AddTag(DebuffTag);
+	if (DebuffTag.MatchesTagExact(Tags.Debuff_Stun))
+	{
+		DebuffEffect->InheritableOwnedTagsContainer.AddTag(Tags.Player_Block_InputHeld);
+		DebuffEffect->InheritableOwnedTagsContainer.AddTag(Tags.Player_Block_CursorTrace);
+		DebuffEffect->InheritableOwnedTagsContainer.AddTag(Tags.Player_Block_InputPressed);
+		DebuffEffect->InheritableOwnedTagsContainer.AddTag(Tags.Player_Block_InputReleased);
+	}
+
 	DebuffEffect->StackingType = EGameplayEffectStackingType::AggregateBySource;
 	DebuffEffect->StackLimitCount = 1;
 
