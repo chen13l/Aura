@@ -249,15 +249,23 @@ void UAuraAbilitySystemComponent::ServerEquipAbility_Implementation(const FGamep
 					return;
 				}
 
-				if (IsPassiveAbility(*SpecInSlot)) { OnDeActivatePassiveAbilityDelegate.Broadcast(GetAbilityTagFromSpec(*SpecInSlot)); }
+				if (IsPassiveAbility(*SpecInSlot))
+				{
+					MulticastActivatePassiveEffect(GetAbilityTagFromSpec(*SpecInSlot), false);
+					OnDeActivatePassiveAbilityDelegate.Broadcast(GetAbilityTagFromSpec(*SpecInSlot));
+				}
 				ClearSlot(*SpecInSlot);
 			}
 			if (!IsAbilityHasAnySlotTag(*AbilitySpec))
 			{
-				if (IsPassiveAbility(*AbilitySpec)) { TryActivateAbility(AbilitySpec->Handle); }
+				if (IsPassiveAbility(*AbilitySpec))
+				{
+					TryActivateAbility(AbilitySpec->Handle);
+					MulticastActivatePassiveEffect(AbilityTag, true);
+				}
 			}
-			AssignSlotToAbility(*AbilitySpec,SlotTag);
-			
+			AssignSlotToAbility(*AbilitySpec, SlotTag);
+
 			MarkAbilitySpecDirty(*AbilitySpec);
 		}
 		ClientEquippedAbility(AbilityTag, Tags.Abilities_Status_Equipped, SlotTag, PrevSlot);
@@ -299,6 +307,11 @@ bool UAuraAbilitySystemComponent::AbilityHasSlot(FGameplayAbilitySpec* AbilitySp
 		}
 	}
 	return false;
+}
+
+void UAuraAbilitySystemComponent::MulticastActivatePassiveEffect_Implementation(const FGameplayTag& AbilityTag, bool bActivate)
+{
+	OnActivatePassiveEffectDelegate.Broadcast(AbilityTag, bActivate);
 }
 
 void UAuraAbilitySystemComponent::UpdateAbilityStatus(int32 Level)

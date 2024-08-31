@@ -5,6 +5,7 @@
 #include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Debuff/DebuffNiagaraComponent.h"
+#include "AbilitySystem/Passive/PassiveNiagaraComponent.h"
 #include "Aura/Aura.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -22,6 +23,15 @@ ACharacterBase::ACharacterBase()
 	StunDebuffComponent->SetupAttachment(GetRootComponent());
 	StunDebuffComponent->SetDebuffTag(FAuraGameplayTags::Get().Debuff_Stun);
 
+	EffectAttachComp = CreateDefaultSubobject<USceneComponent>(TEXT("EffectAttachComp"));
+	EffectAttachComp->SetupAttachment(GetRootComponent());
+	HaloOfProtectionNiagaraComp = CreateDefaultSubobject<UPassiveNiagaraComponent>(TEXT("HaloOfProtectionNiagaraComp"));
+	HaloOfProtectionNiagaraComp->SetupAttachment(EffectAttachComp);
+	LifeSiphonNiagaraComp = CreateDefaultSubobject<UPassiveNiagaraComponent>(TEXT("LifeSiphonNiagaraComp"));
+	LifeSiphonNiagaraComp->SetupAttachment(EffectAttachComp);
+	ManaSiphonNiagaraComp = CreateDefaultSubobject<UPassiveNiagaraComponent>(TEXT("ManaSiphonNiagaraComp"));
+	ManaSiphonNiagaraComp->SetupAttachment(EffectAttachComp);
+	
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);

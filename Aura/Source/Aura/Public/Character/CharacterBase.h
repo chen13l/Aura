@@ -9,6 +9,7 @@
 #include "AbilitySystem/Data/CharacterCategoryInfo.h"
 #include "CharacterBase.generated.h"
 
+class UPassiveNiagaraComponent;
 class UDebuffNiagaraComponent;
 class UNiagaraSystem;
 class UGameplayAbility;
@@ -43,7 +44,7 @@ public:
 	//state
 	virtual void SetIsBeingShocked_Implementation(bool InState) override;
 	virtual bool IsBeingShocked_Implementation() override;
-	
+
 	virtual FOnASCRegisteredSignature GetOnAscRegisteredDelegate() override;
 	FOnASCRegisteredSignature OnAscRegisteredDelegate;
 	virtual FOnDeathSignuture& GetOnDeathDelegate() override;
@@ -138,6 +139,16 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UDebuffNiagaraComponent> StunDebuffComponent;
 
+	//Passive Abilities
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPassiveNiagaraComponent> HaloOfProtectionNiagaraComp;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPassiveNiagaraComponent> LifeSiphonNiagaraComp;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UPassiveNiagaraComponent> ManaSiphonNiagaraComp;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USceneComponent> EffectAttachComp;
+
 	/*debuff*/
 	UPROPERTY(ReplicatedUsing=OnRep_Stunned, BlueprintReadOnly)
 	bool bInStun = false;
@@ -148,9 +159,9 @@ protected:
 	UFUNCTION()
 	virtual void OnRep_Burned();
 	//state
-	UPROPERTY(Replicated,BlueprintReadOnly)
+	UPROPERTY(Replicated, BlueprintReadOnly)
 	bool bIsBeingShocked = false;
-	
+
 	virtual void OnStuntagChanged(const FGameplayTag StunTag, int32 NewCount);
 
 private:
