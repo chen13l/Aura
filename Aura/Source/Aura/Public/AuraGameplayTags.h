@@ -102,6 +102,9 @@ public:
 	//Lightning
 	FGameplayTag Abilities_Lightning_Electrocute;
 
+	// Arcane
+	FGameplayTag Abilities_Arcane_ArcaneShards;
+
 	/* Cooldown */
 	FGameplayTag Cooldown_Fire_FireBolt;
 	

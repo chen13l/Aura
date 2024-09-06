@@ -162,11 +162,17 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 		bTargeting = CurrentActor ? true : false;
 		bAutoRunning = false;
 	}
+	if (GetAuraASC()) { GetAuraASC()->AbilityInputTagPressed(InputTag);}
 }
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	if (GetAuraASC() && GetAuraASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputReleased)) { return; }
+	if (!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	{
+		if (GetAuraASC()) GetAuraASC()->AbilityInputTagReleased(InputTag);
+		return;
+	}
 	if (GetAuraASC()) { GetAuraASC()->AbilityInputTagReleased(InputTag); }
 
 	if (!bTargeting || !bShiftKeyDown)

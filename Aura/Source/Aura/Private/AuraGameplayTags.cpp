@@ -161,6 +161,10 @@ void FAuraGameplayTags::InitNativeGameplayTags()
 	//Lightning
 	AuraGameplayTags.Abilities_Lightning_Electrocute = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		"Abilities.Lightning.Electrocute", "Electrocute Ability Tag");
+	
+	//Arcane
+	AuraGameplayTags.Abilities_Arcane_ArcaneShards = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		"Abilities.Arcane.ArcaneShards", "ArcaneShards Ability Tag");
 
 	//Status
 	AuraGameplayTags.Abilities_Status_Locked = UGameplayTagsManager::Get().AddNativeGameplayTag(
