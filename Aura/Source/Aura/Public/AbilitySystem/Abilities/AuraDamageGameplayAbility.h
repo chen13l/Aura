@@ -46,7 +46,16 @@ protected:
 	float KnockbackChance = 0.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	float KnockbackMagnitude = 1000.f;
-
+	// Radial damage
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
+	bool bRadialDamage = false;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
+	float RadialDamageInnerRadius = 0.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
+	float RadialDamageOuterRadius = 0.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
+	FVector RadialDamageOrigin = FVector::ZeroVector;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 

@@ -21,6 +21,7 @@ void UTargetDataUnderMouse::Activate()
 	}
 	else
 	{
+		// on the server, listen for target data
 		const FGameplayAbilitySpecHandle SpecHandle = GetAbilitySpecHandle();
 		const FPredictionKey ActivationPredictionKey = GetActivationPredictionKey();
 		AbilitySystemComponent.Get()->AbilityTargetDataSetDelegate(SpecHandle, ActivationPredictionKey).AddUObject(

@@ -43,6 +43,13 @@ FAuraDamageEffectParams UAuraDamageGameplayAbility::MakeAuraDamageEffectParams(A
 		Params.DeathImpulseVector = ToTarget * Params.DeathImpulseMagnitude;
 		Params.KnockbackForece = ToTarget * Params.KnockbackMagnitude;
 	}
+	if(bRadialDamage)
+	{
+		Params.bRadialDamage = bRadialDamage;
+		Params.RadialDamageOrigin = RadialDamageOrigin;
+		Params.RadialDamageInnerRadius = RadialDamageInnerRadius;
+		Params.RadialDamageOuterRadius = RadialDamageOuterRadius;
+	}
 
 	return Params;
 }
